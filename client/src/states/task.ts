@@ -63,5 +63,10 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         return { ...state, tasks: state.tasks };
       });
     },
+    clearTasks(state) {
+      set(() => {
+        return { ...state, tasks: null };
+      });
+    },
   };
 });

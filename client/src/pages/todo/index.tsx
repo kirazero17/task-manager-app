@@ -7,10 +7,14 @@ import TaskForm from "./components/TaskForm";
 // Import hooks
 import { useAuth } from "src/hooks/useAuth";
 
+// Import states
+import { useTaskState } from "src/states/task";
+
 export default function TodoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signout } = useAuth();
+  const { clearTasks } = useTaskState();
 
   const buttonClassNames =
     "flex-1 px-3 py-2 hover:bg-slate-100 hover:font-bold ";
@@ -43,7 +47,7 @@ export default function TodoPage() {
             </button>
             <button
               type="button"
-              onClick={() => signout()}
+              onClick={() => signout(clearTasks)}
               className="px-3 py-2 text-xs font-medium text-center inline-flex items-center bg-slate-100 rounded-lg hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300"
             >
               Sign out

@@ -1,7 +1,7 @@
 const { Handler, Controller } = require("../classes/controller");
 
 // Import database client
-const { mySQLCLientActions } = require("../database/mysql");
+const { mySQLClientActions } = require("../database/mysql");
 
 // Import middlewares
 const { createPolicyChecker } = require("../middlewares/checkPolicy");
@@ -25,7 +25,7 @@ userController.appendHandler(
         async function (o) {
           if (!id) throw new Error("Id of user is required");
 
-          const result = await await mySQLCLientActions.exec(
+          const result = await await mySQLClientActions.exec(
             `SELECT * FROM ${usersTableName}\n` +
               `WHERE ${usersTableName}.id LIKE ${id};`
           );
@@ -54,7 +54,7 @@ userController.appendHandler(
         res,
         async function (o) {
           if (!id) throw new Error("The id of user is required");
-          o.data = await mySQLCLientActions.exec(
+          o.data = await mySQLClientActions.exec(
             `SELECT * FROM ${tasksTableName}\n` +
               `WHERE ${tasksTableName}.userId = ${id}\n` +
               `LIMIT ${limit} OFFSET ${skip};`
@@ -83,7 +83,7 @@ userController.appendHandler(
           if (!id) throw new Error("The id of user is required");
           if (!taskId) throw new Error("The id of task is required");
 
-          const result = await mySQLCLientActions.exec(
+          const result = await mySQLClientActions.exec(
             `SELECT * FROM ${tasksTableName}\n` +
               `WHERE ${tasksTableName}.id = ${taskId} AND ${tasksTableName}.userId = ${id}`
           );
@@ -114,8 +114,8 @@ userController.appendHandler(
           if (!id) throw new Error("The id of user is required");
 
           const [fieldsText, fieldsData] =
-            mySQLCLientActions.getFieldsAndData(data);
-          const result = await mySQLCLientActions.exec(
+            mySQLClientActions.getFieldsAndData(data);
+          const result = await mySQLClientActions.exec(
             `INSERT INTO ${tasksTableName} (${fieldsText})\n` +
               `VALUES (${fieldsData});`
           );
@@ -153,8 +153,8 @@ userController.appendHandler(
           if (!taskId) throw new Error("The id of task is required");
 
           const newFieldsAndValues =
-            mySQLCLientActions.getFieldsAndDataAsKeyPair(data);
-          const result = await mySQLCLientActions.exec(
+            mySQLClientActions.getFieldsAndDataAsKeyPair(data);
+          const result = await mySQLClientActions.exec(
             `UPDATE ${tasksTableName}\n` +
               `SET ${newFieldsAndValues}\n` +
               `WHERE ${tasksTableName}.id = ${taskId} AND ${tasksTableName}.userId = ${id};`
@@ -185,7 +185,7 @@ userController.appendHandler(
           if (!id) throw new Error("The id of user is required");
           if (!taskId) throw new Error("The id of task is required");
 
-          const result = await mySQLCLientActions.exec(
+          const result = await mySQLClientActions.exec(
             `DELETE FROM ${tasksTableName}\n` +
               `WHERE ${tasksTableName}.id = ${taskId} AND ${tasksTableName}.userId = ${id};`
           );

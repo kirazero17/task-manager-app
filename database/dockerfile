@@ -1,5 +1,5 @@
 # Use the official MySQL image from the Docker Hub
-FROM mysql:latest
+FROM mysql:8.0.39
 
 # Copy the SQL script to the Docker container
 COPY ./scripts/init.sql /docker-entrypoint-initdb.d/

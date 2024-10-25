@@ -1,7 +1,7 @@
 const { Handler, Controller } = require("../classes/controller");
 
 // Import database client
-const { mySQLCLientActions } = require("../database/mysql");
+const { mySQLClientActions } = require("../database/mysql");
 
 // Import middlewares
 const { createPolicyChecker } = require("../middlewares/checkPolicy");
@@ -21,7 +21,7 @@ taskController.appendHandler(
         this,
         res,
         async function (o) {
-          o.data = await mySQLCLientActions.exec(
+          o.data = await mySQLClientActions.exec(
             `SELECT * FROM ${tableName}\n` + `LIMIT ${limit} OFFSET ${skip};`
           );
           o.message = "Query tasks successfully";
@@ -45,7 +45,7 @@ taskController.appendHandler(
         this,
         res,
         async function (o) {
-          const result = await mySQLCLientActions.exec(
+          const result = await mySQLClientActions.exec(
             `SELECT * FROM ${tableName}\n` + `WHERE ${tableName}.id = ${id};`
           );
 
@@ -72,8 +72,8 @@ taskController.appendHandler(
         res,
         async function (o) {
           const [fieldsText, fieldsData] =
-            mySQLCLientActions.getFieldsAndData(data);
-          const result = await mySQLCLientActions.exec(
+            mySQLClientActions.getFieldsAndData(data);
+          const result = await mySQLClientActions.exec(
             `INSERT INTO ${tableName} (${fieldsText})\n` +
               `VALUES (${fieldsData});`
           );
@@ -110,8 +110,8 @@ taskController.appendHandler(
           if (!id) throw new Error("The id of task is required");
 
           const newFieldsAndValues =
-            mySQLCLientActions.getFieldsAndDataAsKeyPair(data);
-          const result = await mySQLCLientActions.exec(
+            mySQLClientActions.getFieldsAndDataAsKeyPair(data);
+          const result = await mySQLClientActions.exec(
             `UPDATE ${tableName}\n` +
               `SET ${newFieldsAndValues}``WHERE ${tableName}.id = ${id};`
           );
@@ -140,7 +140,7 @@ taskController.appendHandler(
         async function (o) {
           if (!id) throw new Error("The id of task is required");
 
-          const result = await mySQLCLientActions.exec(
+          const result = await mySQLClientActions.exec(
             `DELETE FROM ${tableName}\n` + `WHERE ${tableName}.id = ${id};`
           );
 

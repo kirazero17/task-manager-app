@@ -1,7 +1,7 @@
 const { Handler, Controller } = require("../classes/controller");
 
 // Import database client
-const { mySQLCLientActions } = require("../database/mysql");
+const { mySQLClientActions } = require("../database/mysql");
 
 // Import services
 const { authService } = require("../services/auth");
@@ -14,7 +14,7 @@ authController.appendHandler(
     const data = req.body;
 
     return this.utils.Error.handleResponseError(this, res, async function (o) {
-      const user = await mySQLCLientActions.exec(
+      const user = await mySQLClientActions.exec(
         `SELECT * FROM ${usersTable}\n` +
           `WHERE ${usersTable}.username LIKE '${data.username}'`
       );
@@ -22,8 +22,8 @@ authController.appendHandler(
       if (user[0]) throw new Error("This user existed");
 
       const [fieldsText, fieldsData] =
-        mySQLCLientActions.getFieldsAndData(data);
-      const result = await mySQLCLientActions.exec(
+        mySQLClientActions.getFieldsAndData(data);
+      const result = await mySQLClientActions.exec(
         `INSERT INTO ${usersTable} (${fieldsText})\n` +
           `VALUES (${fieldsData});`
       );
@@ -66,7 +66,7 @@ authController.appendHandler(
         return o;
       }
 
-      const user = await mySQLCLientActions.exec(
+      const user = await mySQLClientActions.exec(
         `SELECT * FROM ${usersTable}\n` +
           `WHERE ${usersTable}.username LIKE '${data.username}'`
       );

@@ -6,7 +6,7 @@ const cors = require("cors");
 const Utils = require("./utils");
 
 // Import database connection
-const { mySQLClient } = require("./database/mysql");
+const { mySQLClient, mySQLClientActions } = require("./database/mysql");
 
 // Import controllers
 const authController = require("./controllers/auth");
@@ -37,17 +37,17 @@ app.get("/", (req, res) => {
 });
 
 app.get("/check", (req, res) => {
-  mySQLClient.query("SELECT COUNT(*) FROM USERS", function (err, results) {
-    return Utils.Error.handleResponseError(app, res, function (o) {
-      if (err) throw err;
+  return Utils.Error.handleResponseError(app, res, async function (o) {
+    if (err) throw err;
 
-      o.data = {
-        message: "Check app",
-        checkResult: results,
-      };
+    const result = await mySQLClientActions.exec("SELECT COUNT(*) FROM USERS");
 
-      return o;
-    });
+    o.data = {
+      message: "Check app",
+      checkResult: result,
+    };
+
+    return o;
   });
 });
 

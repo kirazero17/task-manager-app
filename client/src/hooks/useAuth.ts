@@ -123,10 +123,15 @@ export function useAuth() {
       navigate("/");
     }
   };
-  const signout = function () {
+  const signout = function (fn) {
     CookieUtils.removeCookie(CookieUtils.TOKEN_NAME + "tkn");
     updateIsAuthenticated(false);
     updateUser(null);
+
+    // Do something
+    fn();
+
+    // Navigate to /
     navigate("/");
   };
 
