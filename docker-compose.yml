@@ -1,7 +1,7 @@
 version: "3"
 services:
   mysql:
-    env_file: "./docker-compose-env/database.env"
+    env_file: "./_docker-compose-env/database.env"
     ports:
       - "33061:3306"
     build:
@@ -9,8 +9,8 @@ services:
       context: database
   backend:
     env_file:
-      - path: "./docker-compose-env/database.env"
-      - path: "./docker-compose-env/backend.env"
+      - path: "./_docker-compose-env/database.env"
+      - path: "./_docker-compose-env/backend.env"
     depends_on:
       - mysql
     build:

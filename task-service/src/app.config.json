@@ -1,0 +1,11 @@
+{
+  "port": 3000,
+  "hostname": "localhost",
+  "unListedEndpointsDir": ["index.ts"],
+  "folders": {
+    "templates": "templates",
+    "endpoints": "endpoints",
+    "databases": "databases"
+  },
+  "origins": ["*"]
+}
