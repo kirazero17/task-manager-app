@@ -24,6 +24,11 @@ const supportedArgs = [
     example: "--app=task-service",
   },
   {
+    value: "-a",
+    description: "Define the application",
+    example: "-a task-service",
+  },
+  {
     value: "--root",
     description:
       "Define the root of endpoint and name of folder, you can just create 1 root endpoint!",
@@ -53,7 +58,7 @@ const parsedArgs = parseArgs(args, supportedArgs);
 if (parsedArgs.length === 0) process.exit(0);
 
 const applicationArg = parsedArgs.find(
-  (parsedArg) => parsedArg.name === "--app"
+  (parsedArg) => parsedArg.name === "--app" || parsedArg.name === "-a"
 );
 const srcPath = getSrcPath(applicationArg.value);
 const templatePath = path.resolve(".", "_templates");

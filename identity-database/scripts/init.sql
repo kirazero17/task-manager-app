@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `User` (
     `firstName` NVARCHAR(15),
     `lastName` NVARCHAR(30),
     `username` VARCHAR(30),
-    `email` VARCHAR(30),
+    `email` VARCHAR(255),
     `hashedPassword` VARCHAR(72),
     `isVerified` TINYINT DEFAULT 1,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

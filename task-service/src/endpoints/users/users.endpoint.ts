@@ -11,11 +11,6 @@ const usersEndpoints = new Endpoints("users");
 const IdentityModels = identity();
 
 // Add your handlers here
-usersEndpoints.createHandler("/roles").get(async (req, res) => {
-  const roles = await IdentityModels.Role.findAll();
-  return roles;
-});
-
 usersEndpoints
   .createHandler("")
   .use(AuthMiddlewares.checkToken)

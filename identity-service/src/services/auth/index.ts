@@ -1,12 +1,14 @@
 import fs from "fs";
 import jwt from "jsonwebtoken";
 
+// Import models
+import identity from "src/databases/identity";
+
 // Import utils
 import { StringUtils } from "src/utils/string";
 import { ErrorUtils } from "src/utils/error";
 import { DatetimeUtils } from "src/utils/datetime";
 
-import { PolicyCheker } from "./policyChecker";
 import { AuthSettings } from "./settings";
 
 type AccessTokenPayloadType = {
@@ -16,14 +18,13 @@ type AccessTokenPayloadType = {
 };
 
 class AuthService {
-  policyCheker!: PolicyCheker;
-
+  private _role!: any;
   private _signature!: string;
   private _canCreateToken!: boolean;
 
   constructor() {
     try {
-      this.policyCheker = new PolicyCheker();
+      const IdentityModels = identity();
       this._signature = fs
         .readFileSync(
           StringUtils.getRootDirTo("secrets/jwt_signature"),
@@ -31,22 +32,20 @@ class AuthService {
         )
         .toString();
       this._canCreateToken = true;
+
+      // Get role
+      this._role = {};
+      IdentityModels.Role.findAll().then((roles) => {
+        for (const role of roles) {
+          const r = role.toJSON();
+          this._role[r.name] = r.value;
+        }
+      });
     } catch (error: any) {
       // Just print error's message
       console.error(error.message);
       this._canCreateToken = false;
     }
-  }
-
-  /**
-   * Check policy of a request
-   * @param role
-   * @param resource
-   * @param action
-   * @returns
-   */
-  checkPolicy(role: string, resource: string, action: string) {
-    return this.policyCheker.checkPermission(role, resource, action);
   }
 
   /**
@@ -103,10 +102,10 @@ class AuthService {
         AuthSettings.EXPIRATION.ACCESS_TOKEN.postfix
     );
 
-    if (!(AuthSettings.ROLES as any)[role]) throw new Error("Invalid role");
+    if (!this._role[role]) throw new Error("Invalid role");
 
     let tokenPayload: AccessTokenPayloadType = {
-      role: (AuthSettings.ROLES as any)[role],
+      role: this._role[role],
       expire: period,
       issuer: AuthSettings.ISSUER,
     };
