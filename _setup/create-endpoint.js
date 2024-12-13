@@ -7,13 +7,6 @@ const path = require("path");
 // Import utils
 const { getSrcPath, parseArgs } = require("./utils");
 
-// Import config
-const AppConfig = require("../src/app.config.json");
-
-const srcPath = getSrcPath();
-const templatePath = path.resolve(srcPath, "..", AppConfig.folders.templates);
-const targetPath = path.resolve(srcPath, AppConfig.folders.endpoints);
-
 const endpointTemplateName = "endpoint.template";
 
 const placeHolders = {
@@ -25,6 +18,11 @@ const placeHolders = {
 const [n, f, ...args] = process.argv;
 
 const supportedArgs = [
+  {
+    value: "--app",
+    description: "Define the application",
+    example: "--app=task-service",
+  },
   {
     value: "--root",
     description:
@@ -52,6 +50,14 @@ const supportedArgs = [
 ];
 
 const parsedArgs = parseArgs(args, supportedArgs);
+if (parsedArgs.length === 0) process.exit(0);
+
+const applicationArg = parsedArgs.find(
+  (parsedArg) => parsedArg.name === "--app"
+);
+const srcPath = getSrcPath(applicationArg.value);
+const templatePath = path.resolve(".", "_templates");
+const targetPath = path.resolve(applicationArg.value, srcPath, "endpoints");
 
 console.log("Generating your requested endpoints...");
 
@@ -68,7 +74,7 @@ let endpointTargetTempate = `[ROOT_ENDPOINT_NAME]Endpoints.createHandler("[ENDPO
 });
 `;
 let endpointsTemplate = "";
-let endpointRegex = /^\[(get|post|put|patch|delete)\]([a-zA-Z:]+)$/;
+let endpointRegex = /^\[(get|post|put|patch|delete)\]([a-zA-Z\-:\/]+)$/;
 
 parsedArgs.forEach((parsedArg, index) => {
   // Store the index of root endpoint value and arg
@@ -94,8 +100,6 @@ parsedArgs.forEach((parsedArg, index) => {
     endpointsTemplate += clone + "\n";
   }
 });
-
-if (parsedArgs.length === 0) process.exit(0);
 
 if (rootEndpointIndex === -1) throw new Error("Root endpoint is required");
 

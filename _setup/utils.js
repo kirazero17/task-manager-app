@@ -3,7 +3,7 @@ const path = require("path");
 
 const argFormats = {
   "--": {
-    regex: /^(--[a-zA-Z-]+)=([a-zA-Z;\-:\[\]]+)$/,
+    regex: /^(--[a-zA-Z-]+)=([a-zA-Z;\-:\[\]\/]+)$/,
     example: "--name=value",
   },
   "-": {
@@ -21,8 +21,10 @@ const orms = {
 };
 
 module.exports = {
-  getSrcPath() {
-    let cwd = process.cwd();
+  getSrcPath(startPath) {
+    let cwd = startPath
+      ? path.resolve(process.cwd(), startPath)
+      : process.cwd();
     const srcPath = "src";
     const packageJsonPath = "package.json";
 

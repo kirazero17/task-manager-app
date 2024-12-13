@@ -7,5 +7,12 @@
     "endpoints": "endpoints",
     "databases": "databases"
   },
-  "origins": ["*"]
+  "origins": ["*"],
+  "rootIssuer": "TASK-MANAGER-ISSUER",
+  "tokenExpiration": {
+    "accessToken": {
+      "value": "15",
+      "postfix": "m"
+    }
+  }
 }
