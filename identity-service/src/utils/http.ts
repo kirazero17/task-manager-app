@@ -8,8 +8,8 @@ export type HTTPResponseDataType = {
 
 export type InterchangeDateType<T> = {
   code: number;
-  message: string;
-  data: T;
+  message: string | null;
+  data: T | undefined;
 };
 
 export class HTTPUtils {
@@ -197,7 +197,11 @@ export class HTTPUtils {
    * @param data
    * @returns
    */
-  static generateInterchange(code?: number, message?: string, data?: any) {
+  static generateInterchange<T>(
+    code?: number,
+    message?: string,
+    data?: any
+  ): InterchangeDateType<T> {
     return {
       code: code ? code : 0,
       message: message ? message : null,

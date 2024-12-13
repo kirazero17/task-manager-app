@@ -1,12 +1,21 @@
 // Import classes
 import { Endpoints } from "src/classes/Endpoints";
 
+// Import models
+import identity from "src/databases/identity";
+
 // Import services
 import { AuthMiddlewares } from "src/services/auth/middlewares";
 
 const usersEndpoints = new Endpoints("users");
+const IdentityModels = identity();
 
 // Add your handlers here
+usersEndpoints.createHandler("/roles").get(async (req, res) => {
+  const roles = await IdentityModels.Role.findAll();
+  return roles;
+});
+
 usersEndpoints
   .createHandler("")
   .use(AuthMiddlewares.checkToken)

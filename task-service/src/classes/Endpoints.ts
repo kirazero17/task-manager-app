@@ -172,6 +172,7 @@ export class Endpoints {
   /**
    * Use to build Endpoints
    * @param appRouter
+   * @param databaseModels
    */
   async build(appRouter: Router) {
     const _modules = [];

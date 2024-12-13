@@ -7,14 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Import utils
-const { getSrcPath, getSupportedORM } = require("./utils");
-
-// Import config
-const AppConfig = require("../src/app.config.json");
-const DatabaseConfig = require("../src/db.config.json");
-
-// Check the `databases` config
-const databaseConfigurations = DatabaseConfig.databases;
+const { parseArgs, getSrcPath, getSupportedORM } = require("./utils");
 
 console.log(
   "Currently, this script only supports Sequelize\n" +
@@ -22,9 +15,34 @@ console.log(
     "Please note that - Tuan"
 );
 
+const [n, f, ...args] = process.argv;
+
+const supportedArgs = [
+  {
+    value: "--app",
+    description: "Define the application",
+    example: "--app=task-service",
+  },
+];
+
+const parsedArgs = parseArgs(args, supportedArgs);
+if (parsedArgs.length === 0) process.exit(0);
+
+const applicationArg = parsedArgs.find(
+  (parsedArg) => parsedArg.name === "--app"
+);
+
+const srcPath = getSrcPath(applicationArg.value);
+
+// Import config
+const AppConfig = require(path.resolve(srcPath, "app.config.json"));
+const DatabaseConfig = require(path.resolve(srcPath, "db.config.json"));
+
+// Check the `databases` config
+const databaseConfigurations = DatabaseConfig.databases;
+
 // Declare some variables
-const srcPath = getSrcPath();
-const templatePath = path.resolve(srcPath, "..", AppConfig.folders.templates);
+const templatePath = path.resolve(".", "_templates");
 const targetDirPath = path.resolve(srcPath, AppConfig.folders.databases);
 
 // Check

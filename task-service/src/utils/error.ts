@@ -53,11 +53,12 @@ export class ErrorUtils {
     res: Response,
     fn: (
       this: C,
-      req: Request
+      req: Request,
+      res: Response
     ) => Promise<HTTPResponseDataType> | HTTPResponseDataType
   ) {
     try {
-      await fn.call(ctx, req);
+      await fn.call(ctx, req, res);
     } catch (error: any) {
       const result = HTTPUtils.generateHTTPResponseData(
         404,

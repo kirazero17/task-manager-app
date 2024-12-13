@@ -53,11 +53,12 @@ export class ErrorUtils {
     res: Response,
     fn: (
       this: C,
-      req: Request
+      req: Request,
+      res: Response
     ) => Promise<HTTPResponseDataType> | HTTPResponseDataType
   ) {
     try {
-      await fn.call(ctx, req);
+      await fn.call(ctx, req, res);
     } catch (error: any) {
       const result = HTTPUtils.generateHTTPResponseData(
         404,
@@ -77,16 +78,19 @@ export class ErrorUtils {
    */
   static async handleInterchangeError<C, T>(
     ctx: C,
-    fn: (this: C) => Promise<InterchangeDateType<T>> | InterchangeDateType<T>
+    fn: (
+      this: C,
+      result: InterchangeDateType<T>
+    ) => Promise<T | undefined> | T | undefined
   ) {
-    let result = HTTPUtils.generateInterchange();
+    let result = HTTPUtils.generateInterchange<T>();
 
     try {
-      let maybePromisedData = fn.call(ctx);
+      let maybePromisedData = fn.call(ctx, result);
       // If function is an async function
-      if (maybePromisedData instanceof Promise)
+      if (maybePromisedData instanceof Promise) {
         result.data = await maybePromisedData;
-      else result.data = maybePromisedData;
+      } else result.data = maybePromisedData;
     } catch (error: any) {
       result.code = 1;
       result.message = error.message;

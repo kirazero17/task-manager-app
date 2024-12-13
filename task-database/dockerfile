@@ -1,0 +1,5 @@
+# Use the official MongoDB image from the Docker Hub
+FROM mongo:6.0.20-rc3-nanoserver-ltsc2022
+
+# Copy the NodeJS code to the Docker container
+COPY ./scripts/init.js /docker-entrypoint-initdb.d/

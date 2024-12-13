@@ -29,21 +29,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "task",
-      "database": "Task",
-      "engine": "mongodb",
-      "host": "task.service",
-      "username": "root",
-      "password": "letmein12345",
-      "objects": {
-        "Task": { "collectionName": "Task" },
-        "Assignment": { "collectionName": "Assigment" },
-        "TaskStatus": { "collectionName": "TaskStatus" },
-        "TaskSize": { "collectionName": "TaskSize" },
-        "TaskPriority": { "collectionName": "TaskPriority" }
-      }
     }
   ]
 }

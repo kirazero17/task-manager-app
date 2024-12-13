@@ -51,7 +51,7 @@ export class DirReader {
   /**
    * Use to get path to files of directory recursively, including sub directory.
    * @param startPath
-   * @param {Array<string>} accumulation
+   * @param accumulation
    * @returns
    */
   async getAllPathsToFiles(
@@ -69,6 +69,33 @@ export class DirReader {
 
       if (stat.isDirectory()) {
         await this.getAllPathsToFiles(pathToFile, accumulation);
+      } else {
+        pathToFile = pathToFile.replaceAll(/\\+/g, "/");
+        accumulation.push(pathToFile);
+      }
+    }
+
+    return accumulation;
+  }
+
+  /**
+   * Use to synchronously get path to files of directory recursively, including sub directory.
+   * @param startPath
+   * @param accumulation
+   * @returns
+   */
+  getAllPathsToFilesSync(startPath: string, accumulation: Array<string> = []) {
+    const files = fs.readdirSync(startPath);
+
+    for (const file of files) {
+      // Check if file is in blacklist
+      if (this.isInBlackList(file)) continue;
+
+      let pathToFile = path.resolve(startPath, file);
+      const stat = fs.statSync(pathToFile);
+
+      if (stat.isDirectory()) {
+        this.getAllPathsToFilesSync(pathToFile, accumulation);
       } else {
         pathToFile = pathToFile.replaceAll(/\\+/g, "/");
         accumulation.push(pathToFile);

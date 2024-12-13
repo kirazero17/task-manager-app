@@ -8,6 +8,9 @@ import "module-alias/register";
 // Import config
 import AppConfig from "src/app.config.json";
 
+// Import models
+import identity from "./databases/identity";
+
 // Import endpoints
 import buildEndpoints from "src/endpoints";
 
@@ -26,14 +29,19 @@ app.use(express.urlencoded({ extended: true }));
 // Apply router
 app.use(router);
 
-// Setup server instance
-const instance = http.createServer(app);
+async function main() {
+  // Setup server instance
+  const instance = http.createServer(app);
 
-// Build endpoints
-buildEndpoints(router).then(() => {
+  // Build endpoints
+  await buildEndpoints(router);
+
+  // Start listen
   instance.listen(AppConfig.port, AppConfig.hostname, () => {
     console.log(
       `You server is listening on http://${AppConfig.hostname}:${AppConfig.port}`
     );
   });
-});
+}
+
+main();

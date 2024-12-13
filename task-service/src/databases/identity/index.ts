@@ -9,8 +9,11 @@ import { DirReader } from "src/classes/DirReader";
 import AppConfig from "src/app.config.json";
 import DatabaseConfig from "src/db.config.json";
 
+// Import types
+import type { Model, ModelStatic } from "sequelize";
+
 // Get specific configuration for database
-const database = DatabaseConfig.databases[[INDEX]];
+const database = DatabaseConfig.databases[0];
 
 // Get path of endpoints folder
 const rootFolder = AppConfig.folders.databases;
@@ -35,9 +38,12 @@ const databaseEngine = database.engine
   ? database.engine
   : process.env[`${uppercasedDatabaseName}_ENGINE`];
 
-export type ModelCollectionType = { [key: string]: Model };
+export type IdentityModelsType = {
+  User: ModelStatic<Model>;
+  Role: ModelStatic<Model>;
+};
 
-export default async function () {
+export default function () {
   const models = {};
 
   const sequelize = new Sequelize(
@@ -49,7 +55,7 @@ export default async function () {
       dialect: databaseEngine as Dialect,
     }
   );
-  const modelFilePaths = await reader.getAllPathsToFiles(rootPath);
+  const modelFilePaths = reader.getAllPathsToFilesSync(rootPath);
 
   for (const modelFilePath of modelFilePaths) {
     const modelDefault = require(modelFilePath);
@@ -75,5 +81,5 @@ export default async function () {
     }
   }
 
-  return models;
+  return models as IdentityModelsType;
 }
