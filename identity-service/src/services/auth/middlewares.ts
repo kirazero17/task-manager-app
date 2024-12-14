@@ -41,37 +41,4 @@ export class AuthMiddlewares {
       }
     );
   }
-
-  /**
-   * Check the policy of a role
-   * @param resource
-   * @param action
-   * @returns
-   */
-  static createCheckPolicy(resource: string, action: string) {
-    let that = this;
-
-    return function (req: Request, res: Response, next: NextFunction) {
-      return ErrorUtils.handleJSONResponseError(
-        that,
-        req,
-        res,
-        function ($, $$, o) {
-          const tokenPayload = res.locals.tokenPayload;
-
-          if (!tokenPayload) {
-            o.code = 401;
-            throw new Error("Authentication is required");
-          }
-
-          if (authService.checkPolicy(tokenPayload.role, resource, action)) {
-            return next();
-          } else {
-            o.code = 403;
-            throw new Error("You don't have permission to do this action");
-          }
-        }
-      );
-    };
-  }
 }

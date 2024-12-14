@@ -2,7 +2,7 @@
   "databases": [
     {
       "name": "identity",
-      "database": "TaskIdentity",
+      "database": "TaskManagerIdentity",
       "engine": "mysql",
       "host": "identity.database",
       "username": "root",

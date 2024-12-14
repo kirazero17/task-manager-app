@@ -2,7 +2,7 @@
   "databases": [
     {
       "name": "identity",
-      "database": "TaskIdentity",
+      "database": "TaskManagerIdentity",
       "engine": "mysql",
       "host": "identity.database",
       "username": "root",
@@ -32,9 +32,9 @@
     },
     {
       "name": "task",
-      "database": "Task",
+      "database": "TaskManager",
       "engine": "mongodb",
-      "host": "task.service",
+      "host": "task.database",
       "username": "root",
       "password": "letmein12345",
       "objects": {

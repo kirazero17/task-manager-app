@@ -1,6 +1,6 @@
 -- Create database and tables during container initialization
-CREATE DATABASE IF NOT EXISTS TaskIdentity;
-USE TaskIdentity;
+CREATE DATABASE IF NOT EXISTS TaskManagerIdentity;
+USE TaskManagerIdentity;
 
 CREATE TABLE IF NOT EXISTS `Role` (
     `id` VARCHAR(36),

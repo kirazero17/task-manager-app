@@ -1,0 +1,48 @@
+version: "3"
+services:
+  task.database:
+    env_file: "../_docker-compose-env/task-database.env"
+    ports:
+      - "27017:27017"
+    build:
+      dockerfile: dockerfile
+      context: ../task-database
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+    #   interval: 8s
+    #   retries: 8
+    #   start_period: 10s
+    #   timeout: 15s
+  identity.database:
+    env_file: "../_docker-compose-env/identity-database.env"
+    ports:
+      - "3306:3306"
+    build:
+      dockerfile: dockerfile
+      context: ../identity-database
+    healthcheck:
+      test: ["CMD-SHELL", "mysql", "ping", "-h", "localhost"]
+      interval: 8s
+      retries: 8
+      start_period: 10s
+      timeout: 15s
+  identity.service:
+    depends_on:
+      identity.database:
+        condition: service_healthy
+    build:
+      dockerfile: dockerfile
+      context: ../identity-service
+    ports:
+      - "5000:5000"
+  task.service:
+    depends_on:
+      identity.database:
+        condition: service_healthy
+      # task.database:
+      #   condition: service_healthy
+    build:
+      dockerfile: dockerfile
+      context: ../task-service
+    ports:
+      - "3000:3000"

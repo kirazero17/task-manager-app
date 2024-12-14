@@ -89,7 +89,7 @@ class AuthService {
    * @param credential
    * @returns
    */
-  async createToken(role: string) {
+  createToken(role: string) {
     if (!this._canCreateToken) {
       console.warn(
         "The signature must be assigned before the service creates token"

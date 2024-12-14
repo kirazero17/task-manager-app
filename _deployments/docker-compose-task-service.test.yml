@@ -1,0 +1,17 @@
+version: "3"
+services:
+  task.database:
+    env_file: "../_docker-compose-env/task-database.env"
+    ports:
+      - "27017:27017"
+    build:
+      dockerfile: dockerfile
+      context: ../task-database
+  task.service:
+    depends_on:
+      - task.database
+    build:
+      dockerfile: dockerfile
+      context: ../task-service
+    ports:
+      - "3000:3000"

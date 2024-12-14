@@ -41,7 +41,7 @@ authEndpoints.createHandler("sign-up").post(async (req, res, o) => {
   });
 
   // Check if user with that email or username exists
-  if (userCount > 1) {
+  if (userCount > 0) {
     o.code = 400;
     throw new Error("The account with this username or email is registered");
   }
@@ -71,7 +71,7 @@ authEndpoints.createHandler("sign-up").post(async (req, res, o) => {
 
   return {
     user: { ...data, id: insertResult.id },
-    token: await authService.createToken(role.name),
+    token: authService.createToken(role.name),
   };
 });
 
@@ -104,7 +104,7 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
 
   return {
     user: { ...data, id: user.id },
-    token: await authService.createToken("User"),
+    token: authService.createToken("User"),
   };
 });
 
