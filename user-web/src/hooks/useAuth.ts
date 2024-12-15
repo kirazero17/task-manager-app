@@ -14,9 +14,10 @@ import { CookieUtils } from "src/utils/cookies";
 
 // Import types
 import type {
-  UserModel,
-  AuthenticationData,
-  User,
+  UserType,
+  SignInUserType,
+  SignUpUserType,
+  AuthenticationDataType,
 } from "src/objects/user/type";
 
 const api = new API({
@@ -44,13 +45,13 @@ export function useAuth() {
     updateIsPending,
   } = useAuthState();
 
-  const signin = async function (data: AuthenticationData) {
+  const signin = async function (data: SignInUserType | { token: string }) {
     try {
       updateIsPending(true);
 
       const response = await api.post<
-        AuthenticationData,
-        { token: string; user: User }
+        SignInUserType | { token: string },
+        AuthenticationDataType
       >("/auth/sign-in", data);
 
       const message =
@@ -77,7 +78,7 @@ export function useAuth() {
         BrowserStorageUtils.setItem("user", response?.data.data.user);
       } else {
         // Get user from local storage
-        const user = BrowserStorageUtils.getItem("user") as UserModel;
+        const user = BrowserStorageUtils.getItem("user") as UserType;
         user.id = Number(user.id);
         updateUser(user);
       }
@@ -88,14 +89,14 @@ export function useAuth() {
       navigate("/");
     }
   };
-  const signup = async function (data: UserModel) {
+  const signup = async function (data: SignUpUserType) {
     try {
       updateIsPending(true);
 
-      const response = await api.post<
-        AuthenticationData,
-        { token: string; user: User }
-      >("/auth/sign-up", data);
+      const response = await api.post<SignUpUserType, AuthenticationDataType>(
+        "/auth/sign-up",
+        data
+      );
 
       const message =
         response?.data?.success?.message || "Sign up successfully";
@@ -123,7 +124,7 @@ export function useAuth() {
       navigate("/");
     }
   };
-  const signout = function (fn) {
+  const signout = function (fn: () => void) {
     CookieUtils.removeCookie(CookieUtils.TOKEN_NAME + "tkn");
     updateIsAuthenticated(false);
     updateUser(null);

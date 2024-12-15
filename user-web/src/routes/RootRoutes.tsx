@@ -3,7 +3,7 @@ import { useRoutes, Navigate } from "react-router-dom";
 
 // Import components
 import Signin from "src/pages/auth/components/Signin";
-import Signup from "src/pages/auth/components/Sinup";
+import Signup from "src/pages/auth/components/Signup";
 import Tasks from "src/pages/todo/components/Tasks";
 import CompleteTasks from "src/pages/todo/components/CompleteTasks";
 

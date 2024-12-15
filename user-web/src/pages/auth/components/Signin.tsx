@@ -7,21 +7,19 @@ import LoadingSpinner from "src/components/LoadingSpinner";
 // Import hooks
 import { useAuth } from "src/hooks/useAuth";
 
-type SignInFormInputs = {
-  username: string;
-  password: string;
-};
+// Import types
+import type { SignInUserType } from "src/objects/user/type";
 
 export default function Signin() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInFormInputs>();
+  } = useForm<SignInUserType>();
   const navigate = useNavigate();
   const { signin, isPending } = useAuth();
 
-  const onSubmit: SubmitHandler<SignInFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<SignInUserType> = (data) => {
     if (isPending) return;
     signin(data);
   };
@@ -39,7 +37,7 @@ export default function Signin() {
             htmlFor="username"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            Your username
+            Username
           </label>
           <input
             type="text"
@@ -56,7 +54,7 @@ export default function Signin() {
             htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            Your password
+            Password
           </label>
           <input
             type="password"
@@ -84,13 +82,15 @@ export default function Signin() {
               "Let me in"
             )}
           </button>
-          <button
-            type="button"
-            onClick={() => navigate("/sign-up")}
-            className="w-full bg-slate-100 hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          >
-            or sign up
-          </button>
+          <p className="text-sm">
+            If you don't have account, please{" "}
+            <span
+              className="cursor-pointer font-bold underline text-blue-700"
+              onClick={() => navigate("/sign-up")}
+            >
+              sign up
+            </span>
+          </p>
         </div>
       </form>
     </div>

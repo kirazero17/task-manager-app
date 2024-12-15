@@ -1,18 +1,31 @@
-export type UserModel = {
+export type UserModelType = {
   id?: string | number;
-  name: string;
+  email?: string;
+  firstName: string;
+  lastName: string;
+  username?: string;
+  hashedPassword?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type UserType = Omit<UserModelType, "hashedPassword">;
+
+export type SignInUserType = {
   username: string;
   password: string;
 };
 
-export type User = {
-  id?: string | number;
+export type SignUpUserType = {
+  email: string;
+  firstName: string;
+  lastName: string;
   username: string;
-  name: string;
+  password: string;
+  confirmedPassword: string;
 };
 
-export type AuthenticationData = {
-  username?: string;
-  password?: string;
-  token?: string;
+export type AuthenticationDataType = {
+  user: UserType;
+  token: string;
 };
