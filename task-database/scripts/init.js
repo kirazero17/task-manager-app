@@ -36,11 +36,11 @@ db.TaskStatus.insertMany([
   },
   {
     name: "Drop",
-    value: "Drop",
+    value: "drop",
   },
   {
     name: "Done",
-    value: "Done",
+    value: "done",
   },
   {
     name: "In Process",
@@ -51,31 +51,31 @@ db.TaskStatus.insertMany([
 db.TaskSize.insertMany([
   {
     name: "Super Extra Small",
-    value: "XXS",
+    value: "xxs",
   },
   {
     name: "Extra Small",
-    value: "XS",
+    value: "xs",
   },
   {
     name: "Small",
-    value: "S",
+    value: "s",
   },
   {
     name: "Medium",
-    value: "M",
+    value: "m",
   },
   {
     name: "Large",
-    value: "L",
+    value: "l",
   },
   {
     name: "Extra Large",
-    value: "XL",
+    value: "xl",
   },
   {
     name: "Super Extra Large",
-    value: "XXL",
+    value: "xxl",
   },
 ]);
 

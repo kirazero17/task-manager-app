@@ -10,15 +10,15 @@ export default function () {
       name: Schema.Types.String,
       description: Schema.Types.String,
       progress: Schema.Types.Number,
-      startAt: Schema.Types.String,
-      endAt: Schema.Types.String,
+      startAt: Schema.Types.Number,
+      endAt: Schema.Types.Number,
       createdAt: {
-        type: Schema.Types.String,
-        default: new Date().toLocaleString(),
+        type: Schema.Types.Number,
+        default: Date.now(),
       },
       updatedAt: {
-        type: Schema.Types.String,
-        default: new Date().toLocaleString(),
+        type: Schema.Types.Number,
+        default: Date.now(),
       },
     },
     { collection: "Task" }

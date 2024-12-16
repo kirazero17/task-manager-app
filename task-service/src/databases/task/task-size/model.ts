@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export default function () {
   const TaskSizeSchema = new Schema(
@@ -6,12 +6,12 @@ export default function () {
       name: Schema.Types.String,
       value: Schema.Types.String,
       createdAt: {
-        type: Schema.Types.String,
-        default: new Date().toLocaleString(),
+        type: Schema.Types.Number,
+        default: Date.now(),
       },
       updatedAt: {
-        type: Schema.Types.String,
-        default: new Date().toLocaleString(),
+        type: Schema.Types.Number,
+        default: Date.now(),
       },
     },
     { collection: "TaskSize" }
