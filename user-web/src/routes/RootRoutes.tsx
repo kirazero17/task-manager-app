@@ -1,14 +1,17 @@
 import React from "react";
-import { useRoutes, Navigate } from "react-router-dom";
+import { Outlet, useRoutes, Navigate } from "react-router-dom";
 
 // Import components
 import Signin from "src/pages/auth/components/Signin";
 import Signup from "src/pages/auth/components/Signup";
-import Tasks from "src/pages/todo/components/Tasks";
-import CompleteTasks from "src/pages/todo/components/CompleteTasks";
+import Tasks from "src/pages/todo/components/task";
+import CompleteTasks from "src/pages/todo/components/complete-task";
 
 // Import hooks
-import { useAuth } from "src/hooks/useAuth";
+import { useAuth } from "src/hooks/use-auth";
+
+// Import layouts
+import DashboardLayout from "src/layouts/dashboard";
 
 // Import pages
 import AuthPage from "src/pages/auth";
@@ -45,23 +48,19 @@ const unAuthenticatedRoutes: Array<RouteObject> = [
 const authenticatedRoutes: Array<RouteObject> = [
   {
     path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/todo",
-    element: <TodoPage />,
+    element: (
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    ),
     children: [
       {
-        path: "tasks",
-        element: <Tasks />,
+        path: "/tasks",
+        element: <TodoPage />,
       },
       {
-        path: "complete",
-        element: <CompleteTasks />,
-      },
-      {
-        path: "",
-        element: <Navigate to="tasks" replace />,
+        path: "/",
+        element: <Navigate to="/tasks" replace />,
       },
     ],
   },
@@ -85,7 +84,9 @@ export default function RootRoutes() {
     }
   }, []);
 
-  return isAuthenticated
-    ? useRoutes(authenticatedRoutes)
-    : useRoutes(unAuthenticatedRoutes);
+  return useRoutes(authenticatedRoutes);
+
+  // return isAuthenticated
+  //   ? useRoutes(authenticatedRoutes)
+  //   : useRoutes(unAuthenticatedRoutes);
 }

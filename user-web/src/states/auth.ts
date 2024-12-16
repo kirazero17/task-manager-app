@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
 // Import types
-import type { User } from "src/objects/user/type";
+import type { UserType } from "src/objects/user/type";
 
 type AuthState = {
   isAuthenticated: boolean;
   isPending: boolean;
-  user: User | null;
+  user: UserType | null;
 };
 
 type AuthActions = {

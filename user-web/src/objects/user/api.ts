@@ -4,8 +4,8 @@ import { API } from "src/api";
 import { BrowserStorageUtils } from "src/utils/browser_storage";
 
 // Import types
-import type { User } from "./type";
-import type { TaskModel } from "../task/type";
+import type { UserType } from "./type";
+import type { TaskType, NewTaskType, UpdateTaskType } from "../task/type";
 
 const TaskManagerAPI = new API({
   baseURL: import.meta.env.VITE_TASK_SERVICE_ENDPOINT,
@@ -17,7 +17,7 @@ const IdentityAPI = new API({
 
 export class UserAPI {
   static getLocalUser() {
-    const user = BrowserStorageUtils.getItem("user") as User;
+    const user = BrowserStorageUtils.getItem("user") as UserType;
     if (!user) throw new Error("User isn't found in local storage");
     return user;
   }
@@ -25,7 +25,7 @@ export class UserAPI {
   static async getUser() {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await IdentityAPI.get<User>(`/users/${user.id}`, {
+      const response = await IdentityAPI.get<UserType>(`/users/${user.id}`, {
         headers: {
           Authorization: API.generateBearerToken(API.getToken()) as string,
         },
@@ -39,7 +39,7 @@ export class UserAPI {
   static async getTasks() {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await TaskManagerAPI.get<Array<TaskModel>>(
+      const response = await TaskManagerAPI.get<Array<TaskType>>(
         `/users/${user.id}/tasks`,
         {
           headers: {
@@ -56,7 +56,7 @@ export class UserAPI {
   static async getTask(taskId: string | number) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await TaskManagerAPI.get<TaskModel>(
+      const response = await TaskManagerAPI.get<TaskType>(
         `users/${user.id}/tasks/${taskId}`,
         {
           headers: {
@@ -70,10 +70,10 @@ export class UserAPI {
     }
   }
 
-  static async createTask(task: TaskModel) {
+  static async createTask(task: NewTaskType) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await TaskManagerAPI.post<TaskModel, TaskModel>(
+      const response = await TaskManagerAPI.post<NewTaskType, TaskType>(
         `/users/${user.id}/task`,
         task,
         {
@@ -88,11 +88,11 @@ export class UserAPI {
     }
   }
 
-  static async updateTask(task: TaskModel) {
+  static async updateTask(id: string, task: UpdateTaskType) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await TaskManagerAPI.patch<TaskModel, TaskModel>(
-        `/users/${user.id}/tasks/${task.id}`,
+      const response = await TaskManagerAPI.patch<UpdateTaskType, TaskType>(
+        `/users/${user.id}/tasks/${id}`,
         task,
         {
           headers: {
@@ -106,10 +106,10 @@ export class UserAPI {
     }
   }
 
-  static async deleteTask(taskId: string | number) {
+  static async deleteTask(taskId: string) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await TaskManagerAPI.delete<TaskModel>(
+      const response = await TaskManagerAPI.delete<TaskType>(
         `/users/${user.id}/tasks/${taskId}`,
         {
           headers: {

@@ -1,11 +1,23 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { CircleAlert, Moon } from "lucide-react";
 import cn from "classnames";
 
 // Import components
-import TaskForm from "./components/TaskForm";
+import ColumnView from "./components/column-view";
+import TimelineView from "./components/timeline-view";
+import TableView from "./components/table-view";
+import TaskForm from "./components/task-form";
+import { Button } from "src/components/ui/button";
+import { Progress } from "src/components/ui/progress";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "src/components/ui/tabs";
 
 // Import hooks
-import { useAuth } from "src/hooks/useAuth";
+import { useAuth } from "src/hooks/use-auth";
 
 // Import states
 import { useTaskState } from "src/states/task";
@@ -16,67 +28,55 @@ export default function TodoPage() {
   const { user, signout } = useAuth();
   const { clearTasks } = useTaskState();
 
-  const buttonClassNames =
-    "flex-1 px-3 py-2 hover:bg-slate-100 hover:font-bold ";
-  const activeButtonClassNames =
-    buttonClassNames + "font-bold border-b border-b-2 border-blue-700";
-  const buttonTaskClassNames = cn({
-    [activeButtonClassNames]: location.pathname === "/todo/tasks",
-    [buttonClassNames]: location.pathname !== "/todo/tasks",
-  });
-  const buttonCompleteTaskClassNames = cn({
-    [activeButtonClassNames]: location.pathname === "/todo/complete",
-    [buttonClassNames]: location.pathname !== "/todo/complete",
-  });
-
   return (
-    <div className="w-full h-screen flex justify-center items-center">
-      <div className="flex flex-col w-full max-w-[720px] min-w-[300px] max-h-[720px] bg-white p-6 rounded-lg border border-blue-700">
-        <header className="flex justify-between">
-          <div>
-            <h1 className="font-bold text-3xl">Hello, {user?.name}</h1>
-            <p>Have you done all your task?</p>
-          </div>
+    <div className="w-full h-[calc(100dvh-28px)] flex flex-col px-2 py-3">
+      <header className="flex justify-between items-center px-3">
+        <div className="w-1/4">
+          <h1 className="text-lg font-bold">Tasks</h1>
           <div className="flex items-center">
-            <button
-              type="button"
-              onClick={() => navigate("/")}
-              className="flex items-center px-3 py-2 me-2 text-xs font-medium text-center inline-flex items-center bg-white rounded-lg hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300"
-            >
-              Go home
-            </button>
-            <button
-              type="button"
-              onClick={() => signout(clearTasks)}
-              className="px-3 py-2 text-xs font-medium text-center inline-flex items-center bg-slate-100 rounded-lg hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300"
-            >
-              Sign out
-            </button>
+            <Progress value={33} className="w-full h-[6px] me-3" />
+            <span className="text-xs">3/10</span>
           </div>
-        </header>
-        <div className="flex justify-between border-b border-b-1 mt-4 mb-6">
-          <button
-            onClick={() => {
-              navigate("/todo/tasks");
-            }}
-            className={buttonTaskClassNames}
-          >
-            Task
-          </button>
-          <button
-            onClick={() => {
-              navigate("/todo/complete");
-            }}
-            className={buttonCompleteTaskClassNames}
-          >
-            Complete
-          </button>
         </div>
-        {location.pathname === "/todo/tasks" && <TaskForm />}
-        <section className="h-full overflow-y-auto">
-          <Outlet />
-        </section>
-      </div>
+        <div className="flex justify-end gap-2 w-3/4">
+          <Button variant="outline">
+            <CircleAlert />
+            Report
+          </Button>
+          <Button variant="outline" size="icon">
+            <Moon />
+          </Button>
+        </div>
+      </header>
+
+      <hr className="my-3" />
+      <section className="flex flex-1">
+        <Tabs defaultValue="default" className="w-full flex flex-col flex-1">
+          <TabsList className="w-fit">
+            <TabsTrigger value="default">Default</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+            <TabsTrigger value="table">Table</TabsTrigger>
+          </TabsList>
+          <TabsContent
+            className="data-[state=active]:flex data-[state=active]:flex-1"
+            value="default"
+          >
+            <ColumnView />
+          </TabsContent>
+          <TabsContent
+            className="data-[state=active]:flex data-[state=active]:flex-1"
+            value="timeline"
+          >
+            <TimelineView />
+          </TabsContent>
+          <TabsContent
+            className="data-[state=active]:flex data-[state=active]:flex-1"
+            value="table"
+          >
+            <TableView />
+          </TabsContent>
+        </Tabs>
+      </section>
     </div>
   );
 }

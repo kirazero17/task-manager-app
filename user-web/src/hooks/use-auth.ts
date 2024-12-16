@@ -124,13 +124,13 @@ export function useAuth() {
       navigate("/");
     }
   };
-  const signout = function (fn: () => void) {
+  const signout = function (fn?: () => void) {
     CookieUtils.removeCookie(CookieUtils.TOKEN_NAME + "tkn");
     updateIsAuthenticated(false);
     updateUser(null);
 
     // Do something
-    fn();
+    if (fn) fn();
 
     // Navigate to /
     navigate("/");

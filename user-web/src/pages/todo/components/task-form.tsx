@@ -1,10 +1,10 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // Import components
-import LoadingSpinner from "src/components/LoadingSpinner";
+import LoadingSpinner from "src/components/loading-spinner";
 
 // Import hooks
-import { useAuth } from "src/hooks/useAuth";
+import { useAuth } from "src/hooks/use-auth";
 
 // Import objects
 import { UserAPI } from "src/objects/user/api";

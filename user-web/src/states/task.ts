@@ -1,27 +1,49 @@
-import { create } from "zustand";
+import { create, UseBoundStore } from "zustand";
 
 // Import utils
 import { OtherUtils } from "src/utils/other";
 
 // Import types
-import type { TaskModel } from "src/objects/task/type";
+import type {
+  TaskType,
+  TaskPriorityType,
+  TaskSizeType,
+  TaskStatusType,
+} from "src/objects/task/type";
 
 type TaskState = {
-  tasks: Array<TaskModel> | null;
+  tasks: Array<TaskType> | null;
+  taskStatuses: Array<TaskStatusType> | null;
+  taskPriorities: Array<TaskPriorityType> | null;
+  taskSizes: Array<TaskSizeType> | null;
   isResponding: boolean;
 };
 
 type TaskActions = {
-  setTasks(tasks: Array<TaskModel> | null): void;
-  addTask(task: TaskModel): void;
-  updateTask(task: TaskModel): void;
+  // For task
+  setTasks(tasks: Array<TaskType> | null): void;
+  addTask(task: TaskType): void;
+  updateTask(task: TaskType): void;
   deteteTask(taskId: string | number): void;
   updateIsResponding(status?: boolean): void;
+  clearTasks(): void;
+
+  // For status of task
+  setTaskStatuses(statuses: Array<TaskStatusType> | null): void;
+
+  // For priority of task
+  setTaskPriorities(statuses: Array<TaskPriorityType> | null): void;
+
+  // For size of task
+  setTaskSizes(statuses: Array<TaskSizeType> | null): void;
 };
 
 export const useTaskState = create<TaskState & TaskActions>((set) => {
   return {
     tasks: null,
+    taskStatuses: null,
+    taskPriorities: null,
+    taskSizes: null,
     isResponding: false,
     updateIsResponding(status?: boolean) {
       set((state) => ({ ...state, isResponding: Boolean(status) }));
@@ -29,7 +51,7 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
     setTasks(tasks) {
       set((state) => ({ ...state, tasks: tasks }));
     },
-    addTask(task: TaskModel) {
+    addTask(task: TaskType) {
       set((state) => {
         let tasks = state.tasks;
 
@@ -40,12 +62,12 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         return { ...state, tasks };
       });
     },
-    updateTask(task: TaskModel) {
+    updateTask(task: TaskType) {
       set((state) => {
         if (!state.tasks) return state;
 
         const tasks = state.tasks;
-        const oldTaskId = tasks.findIndex((t) => t.id === task.id);
+        const oldTaskId = tasks.findIndex((t) => t._id === task._id);
 
         if (!task) return state;
 
@@ -63,9 +85,29 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         return { ...state, tasks: state.tasks };
       });
     },
-    clearTasks(state) {
-      set(() => {
+    clearTasks() {
+      set((state) => {
         return { ...state, tasks: null };
+      });
+    },
+    // For status of task
+    setTaskStatuses(statuses: Array<TaskStatusType> | null) {
+      set((state) => {
+        return { ...state, taskStatuses: statuses };
+      });
+    },
+
+    // For priority of task
+    setTaskPriorities(statuses: Array<TaskPriorityType> | null) {
+      set((state) => {
+        return { ...state, taskPriorities: statuses };
+      });
+    },
+
+    // For size of task
+    setTaskSizes(statuses: Array<TaskSizeType> | null) {
+      set((state) => {
+        return { ...state, taskSizes: statuses };
       });
     },
   };

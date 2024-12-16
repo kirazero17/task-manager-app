@@ -3,10 +3,11 @@ import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // Import components
-import LoadingSpinner from "src/components/LoadingSpinner";
+import LoadingSpinner from "src/components/loading-spinner";
+import { Button } from "src/components/ui/button";
 
 // Import hooks
-import { useAuth } from "src/hooks/useAuth";
+import { useAuth } from "src/hooks/use-auth";
 
 // Import types
 import type { SignUpUserType } from "src/objects/user/type";
@@ -148,11 +149,7 @@ export default function Signup() {
         </div>
         <hr className="my-3" />
         <div className="flex flex-col items-center">
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-3 text-center"
-          >
+          <Button type="submit" disabled={isPending} className="w-full mb-3">
             {isPending ? (
               <div className="flex justify-center items-center">
                 <LoadingSpinner width="w-4" height="w-4" />
@@ -161,7 +158,7 @@ export default function Signup() {
             ) : (
               "Submit"
             )}
-          </button>
+          </Button>
           <p className="text-sm">
             Back to{" "}
             <span

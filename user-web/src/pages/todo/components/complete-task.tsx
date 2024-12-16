@@ -1,7 +1,7 @@
 import React from "react";
 
 // Import components
-import TaskCard from "./TaskCard";
+import TaskCard from "./task-card";
 import TaskCardSkeleton from "./TaskCardSkeleton";
 
 // Import objects
