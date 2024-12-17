@@ -4,7 +4,7 @@ import type {
   TaskPriorityType,
   TaskSizeType,
   TaskStatusType,
-} from "src/objects/task/type";
+} from "src/objects/task/types";
 
 export class TaskUtils {
   /**
@@ -92,5 +92,109 @@ export class TaskUtils {
     }
 
     return result;
+  }
+
+  /**
+   * Get background & text color of Priority badge
+   * @param task
+   * @returns
+   */
+  static getPriorityBadgeColor(task?: TaskType | null) {
+    let result = "";
+
+    if (!task) return result;
+
+    switch (task?.priority.value) {
+      case "p0": {
+        result = `bg-red-700 text-white`;
+        break;
+      }
+
+      case "p1": {
+        result = `bg-red-500 text-white`;
+        break;
+      }
+
+      case "p2": {
+        result = `bg-orange-500 text-white`;
+        break;
+      }
+
+      case "p3": {
+        result = `bg-yellow-400 text-white`;
+        break;
+      }
+
+      case "p4": {
+        result = `bg-green-500 text-white`;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Get outline / borer & text color of Size badge
+   * @param task
+   * @returns
+   */
+  static getSizeBadgeColor(task?: TaskType | null) {
+    let result = "";
+
+    if (!task) return result;
+
+    switch (task?.size.value) {
+      case "xxs": {
+        result = `bg-lime-50 border-lime-700 text-lime-700`;
+        break;
+      }
+
+      case "xs": {
+        result = `bg-green-50 border-green-700 text-green-700`;
+        break;
+      }
+
+      case "s": {
+        result = `bg-teal-50 border-teal-700 text-teal-700`;
+        break;
+      }
+
+      case "m": {
+        result = `bg-gray-50 border-gray-400 text-gray-800`;
+        break;
+      }
+
+      case "l": {
+        result = `bg-blue-50 border-blue-600 text-blue-600`;
+        break;
+      }
+
+      case "xl": {
+        result = `bg-pink-50 border-pink-700 text-pink-700`;
+        break;
+      }
+
+      case "xxl": {
+        result = `bg-purple-50 border-purple-800 text-purple-800`;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Get start and end date as string format
+   * @param task
+   * @returns
+   */
+  static getStartEndDateStr(task?: TaskType | null) {
+    if (!task) return;
+
+    let startStr = new Date(task.startAt).toDateString();
+    let endStr = new Date(task.endAt).toDateString();
+
+    return `${startStr} - ${endStr}`;
   }
 }

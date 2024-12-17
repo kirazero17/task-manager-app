@@ -7,55 +7,27 @@ import RootRoutes from "./routes/RootRoutes";
 import { useTaskState } from "./states/task";
 
 function App() {
-  const { setTaskStatuses } = useTaskState();
+  const { setTasks, setTaskPriorities, setTaskSizes, setTaskStatuses } =
+    useTaskState();
 
   React.useEffect(() => {
     // Fetch some values
     // In development
-    setTaskStatuses([
-      {
-        _id: "0",
-        name: "Not Started",
-        value: "not_started",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-      {
-        _id: "1",
-        name: "Considering",
-        value: "considering",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-      {
-        _id: "2",
-        name: "Bug",
-        value: "bug",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-      {
-        _id: "3",
-        name: "Drop",
-        value: "drop",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-      {
-        _id: "4",
-        name: "Done",
-        value: "done",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-      {
-        _id: "5",
-        name: "In Process",
-        value: "in_process",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    ]);
+    import("src/mock-data/statuses.json").then((result) => {
+      setTaskStatuses(result.default);
+    });
+
+    import("src/mock-data/sizes.json").then((result) => {
+      setTaskSizes(result.default);
+    });
+
+    import("src/mock-data/priorities.json").then((result) => {
+      setTaskPriorities(result.default);
+    });
+
+    import("src/mock-data/tasks.json").then((result) => {
+      setTasks(result.default);
+    });
   }, []);
 
   return (

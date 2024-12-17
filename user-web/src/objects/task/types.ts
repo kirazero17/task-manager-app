@@ -1,3 +1,6 @@
+// Import types
+import type { UserType } from "../user/types";
+
 export type TaskModelType = {
   _id: string;
   creatorId: string;
@@ -13,7 +16,16 @@ export type TaskModelType = {
   updatedAt: number;
 };
 
-export type TaskType = TaskModelType;
+export type TaskType = Omit<
+  TaskModelType,
+  "creatorId" | "priorityId" | "statusId" | "sizeId"
+> & {
+  creator: UserType;
+  priority: TaskPriorityType;
+  status: TaskStatusType;
+  size: TaskSizeType;
+  assignees?: Array<any>;
+};
 
 export type NewTaskType = {
   creatorId: string;

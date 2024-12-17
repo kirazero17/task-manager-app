@@ -50,15 +50,15 @@ export default function TodoPage() {
       </header>
 
       <hr className="my-3" />
-      <section className="flex flex-1">
-        <Tabs defaultValue="default" className="w-full flex flex-col flex-1">
+      <section className="flex flex-1 overflow-hidden">
+        <Tabs defaultValue="default" className="w-full flex flex-col">
           <TabsList className="w-fit">
             <TabsTrigger value="default">Default</TabsTrigger>
             <TabsTrigger value="timeline">Timeline</TabsTrigger>
             <TabsTrigger value="table">Table</TabsTrigger>
           </TabsList>
           <TabsContent
-            className="data-[state=active]:flex data-[state=active]:flex-1"
+            className="overflow-hidden data-[state=active]:flex data-[state=active]:flex-1"
             value="default"
           >
             <ColumnView />

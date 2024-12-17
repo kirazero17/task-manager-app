@@ -1,5 +1,5 @@
 // Import types
-import type { UserType } from "./type";
+import type { UserType } from "./types";
 
 export class UserUtils {
   /**

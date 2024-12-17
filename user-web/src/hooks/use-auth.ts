@@ -18,7 +18,7 @@ import type {
   SignInUserType,
   SignUpUserType,
   AuthenticationDataType,
-} from "src/objects/user/type";
+} from "src/objects/user/types";
 
 const api = new API({
   baseURL: import.meta.env.VITE_API_ENDPOINT,

@@ -1,11 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Target,
-  BriefcaseBusiness,
-  Search,
-  Settings,
-  ChevronUp,
-} from "lucide-react";
+import { BriefcaseBusiness, Search, Settings } from "lucide-react";
 
 // Import components
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
@@ -23,20 +17,20 @@ import {
 } from "src/components/ui/sidebar";
 import { NavUser } from "./nav-user";
 
+// Import data
+import { AuthenticatedRoutesMetadata } from "src/routes/RootRoutes";
+
 // Menu items.
 const items = [
   {
-    title: "Your tasks",
     url: "/tasks",
     icon: BriefcaseBusiness,
   },
   {
-    title: "Search",
     url: "/search",
     icon: Search,
   },
   {
-    title: "Settings",
     url: "/settings",
     icon: Settings,
   },
@@ -62,11 +56,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem
+                  key={AuthenticatedRoutesMetadata.get(item.url)}
+                >
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span>{AuthenticatedRoutesMetadata.get(item.url)}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

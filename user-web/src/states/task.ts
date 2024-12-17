@@ -9,10 +9,11 @@ import type {
   TaskPriorityType,
   TaskSizeType,
   TaskStatusType,
-} from "src/objects/task/type";
+} from "src/objects/task/types";
 
 type TaskState = {
   tasks: Array<TaskType> | null;
+  tasksByStatus: Map<string, Array<TaskType> | null> | null;
   taskStatuses: Array<TaskStatusType> | null;
   taskPriorities: Array<TaskPriorityType> | null;
   taskSizes: Array<TaskSizeType> | null;
@@ -41,6 +42,7 @@ type TaskActions = {
 export const useTaskState = create<TaskState & TaskActions>((set) => {
   return {
     tasks: null,
+    tasksByStatus: null,
     taskStatuses: null,
     taskPriorities: null,
     taskSizes: null,
@@ -49,7 +51,30 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
       set((state) => ({ ...state, isResponding: Boolean(status) }));
     },
     setTasks(tasks) {
-      set((state) => ({ ...state, tasks: tasks }));
+      set((state) => {
+        // If task and state.tasksByStatus are not null,
+        // classify tasks with status
+        let _tasksByStatus = null;
+        if (tasks && state.tasksByStatus) {
+          _tasksByStatus = state.tasksByStatus;
+
+          for (const task of tasks) {
+            // Get taskList that is stored in Map
+            let taskList = _tasksByStatus.get(task.status.value);
+
+            // If taskList is null, create new list
+            if (!taskList) {
+              taskList = [];
+              _tasksByStatus.set(task.status.value, taskList);
+            }
+
+            // Append to task list by reference
+            taskList.push(task);
+          }
+        }
+
+        return { ...state, tasks: tasks, tasksByStatus: _tasksByStatus };
+      });
     },
     addTask(task: TaskType) {
       set((state) => {
@@ -93,21 +118,28 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
     // For status of task
     setTaskStatuses(statuses: Array<TaskStatusType> | null) {
       set((state) => {
-        return { ...state, taskStatuses: statuses };
+        let tasksByStatus;
+
+        if (statuses) {
+          tasksByStatus = new Map<string, Array<TaskType> | null>(
+            statuses.map((priority) => [priority.value, null])
+          );
+        }
+        return { ...state, taskStatuses: statuses, tasksByStatus };
       });
     },
 
     // For priority of task
-    setTaskPriorities(statuses: Array<TaskPriorityType> | null) {
+    setTaskPriorities(priorities: Array<TaskPriorityType> | null) {
       set((state) => {
-        return { ...state, taskPriorities: statuses };
+        return { ...state, taskPriorities: priorities };
       });
     },
 
     // For size of task
-    setTaskSizes(statuses: Array<TaskSizeType> | null) {
+    setTaskSizes(sizes: Array<TaskSizeType> | null) {
       set((state) => {
-        return { ...state, taskSizes: statuses };
+        return { ...state, taskSizes: sizes };
       });
     },
   };

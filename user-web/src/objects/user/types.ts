@@ -1,5 +1,9 @@
+// Import types
+import type { RoleModelType } from "../auth/types";
+
 export type UserModelType = {
   id?: string | number;
+  roleId?: string | number;
   email?: string;
   firstName: string;
   lastName: string;
@@ -9,7 +13,9 @@ export type UserModelType = {
   updatedAt?: string;
 };
 
-export type UserType = Omit<UserModelType, "hashedPassword">;
+export type UserType = Omit<UserModelType, "hashedPassword" | "roleId"> & {
+  role: RoleModelType;
+};
 
 export type SignInUserType = {
   username: string;

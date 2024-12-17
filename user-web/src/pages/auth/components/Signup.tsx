@@ -10,7 +10,7 @@ import { Button } from "src/components/ui/button";
 import { useAuth } from "src/hooks/use-auth";
 
 // Import types
-import type { SignUpUserType } from "src/objects/user/type";
+import type { SignUpUserType } from "src/objects/user/types";
 
 export default function Signup() {
   const {

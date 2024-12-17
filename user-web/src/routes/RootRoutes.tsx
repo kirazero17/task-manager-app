@@ -24,6 +24,13 @@ import { CookieUtils } from "src/utils/cookies";
 // Import types
 import type { RouteObject } from "react-router-dom";
 
+export const AuthenticatedRoutesMetadata = new Map([
+  ["/", "Task Manager"],
+  ["/tasks", "Your tasks"],
+  ["/search", "Search"],
+  ["/settings", "Settings"],
+]);
+
 const unAuthenticatedRoutes: Array<RouteObject> = [
   {
     path: "/",

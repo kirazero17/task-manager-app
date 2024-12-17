@@ -4,8 +4,8 @@ import { API } from "src/api";
 import { BrowserStorageUtils } from "src/utils/browser_storage";
 
 // Import types
-import type { UserType } from "./type";
-import type { TaskType, NewTaskType, UpdateTaskType } from "../task/type";
+import type { UserType } from "./types";
+import type { TaskType, NewTaskType, UpdateTaskType } from "../task/types";
 
 const TaskManagerAPI = new API({
   baseURL: import.meta.env.VITE_TASK_SERVICE_ENDPOINT,

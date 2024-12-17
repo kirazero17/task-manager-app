@@ -7,7 +7,7 @@ import type {
   SignInUserType,
   SignUpUserType,
   AuthenticationDataType,
-} from "../user/type";
+} from "../user/types";
 
 const api = new API({
   baseURL: import.meta.env.VITE_IDENTITY_SERVICE_ENDPOINT,

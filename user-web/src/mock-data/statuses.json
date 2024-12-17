@@ -1,0 +1,44 @@
+[
+  {
+    "_id": "0",
+    "name": "Not Started",
+    "value": "not_started",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  },
+  {
+    "_id": "1",
+    "name": "Considering",
+    "value": "considering",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  },
+  {
+    "_id": "2",
+    "name": "Bug",
+    "value": "bug",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  },
+  {
+    "_id": "3",
+    "name": "Drop",
+    "value": "drop",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  },
+  {
+    "_id": "4",
+    "name": "Done",
+    "value": "done",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  },
+  {
+    "_id": "5",
+    "name": "In Process",
+    "value": "in_process",
+    "createdAt": 1734402915812,
+    "updatedAt": 1734402915812
+  }
+]

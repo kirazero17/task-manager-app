@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 // Import types
-import type { UserType } from "src/objects/user/type";
+import type { UserType } from "src/objects/user/types";
 
 type AuthState = {
   isAuthenticated: boolean;
