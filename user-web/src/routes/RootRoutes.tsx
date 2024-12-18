@@ -2,8 +2,8 @@ import React from "react";
 import { Outlet, useRoutes, Navigate } from "react-router-dom";
 
 // Import components
-import Signin from "src/pages/auth/components/Signin";
-import Signup from "src/pages/auth/components/Signup";
+import Signin from "src/pages/auth/components/sign-in";
+import Signup from "src/pages/auth/components/sign-up";
 import Tasks from "src/pages/todo/components/task";
 import CompleteTasks from "src/pages/todo/components/complete-task";
 

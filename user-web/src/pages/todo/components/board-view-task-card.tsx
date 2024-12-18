@@ -4,6 +4,11 @@ import { GripVertical } from "lucide-react";
 import { UserAPI } from "src/objects/user/api";
 
 // Import components
+import {
+  TaskSizeBadge,
+  TaskPriorityBadge,
+  TaskStatusBadge,
+} from "./task-attribute-badges";
 import { Badge } from "src/components/ui/badge";
 
 // Import states
@@ -54,21 +59,9 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
         </div>
         <div className="mt-2">
           {props.data.priority && (
-            <Badge
-              className={TaskUtils.getPriorityColor(props.data) + " me-2"}
-              variant="default"
-            >
-              {props.data.priority.name}
-            </Badge>
+            <TaskPriorityBadge className="me-2" data={props.data.priority} />
           )}
-          {props.data.size && (
-            <Badge
-              className={TaskUtils.getSizeColor(props.data)}
-              variant="outline"
-            >
-              {props.data.size.name}
-            </Badge>
-          )}
+          {props.data.size && <TaskSizeBadge data={props.data.size} />}
         </div>
       </section>
       <div className="flex">

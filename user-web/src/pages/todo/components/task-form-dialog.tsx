@@ -1,7 +1,15 @@
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // Import components
 import LoadingSpinner from "src/components/loading-spinner";
+import {
+  TaskSizeBadge,
+  TaskStatusBadge,
+  TaskPriorityBadge,
+} from "./task-attribute-badges";
+import { Input } from "src/components/ui/input";
+import { Textarea } from "src/components/ui/textarea";
 import { Button } from "src/components/ui/button";
 import {
   DialogContent,
@@ -9,11 +17,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "src/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "src/components/ui/select";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
+import { useStateManager } from "src/hooks/use-state-mananger";
 
 // Import objects
 import { UserAPI } from "src/objects/user/api";
@@ -21,33 +38,71 @@ import { UserAPI } from "src/objects/user/api";
 // Import states
 import { useTaskState } from "src/states/task";
 
-type TaskFormInputs = {
-  name: string;
-  description: string;
-};
+// Import types
+import type { TaskModelType } from "src/objects/task/types";
 
 export default function TaskFormDialog() {
-  const { addTask, isResponding, updateIsResponding } = useTaskState();
+  const {
+    taskPriorities,
+    taskStatuses,
+    taskSizes,
+    isResponding,
+    addTask,
+    updateIsResponding,
+  } = useTaskState();
   const { user } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TaskFormInputs>();
+  } = useForm<any>();
 
-  const onSubmit: SubmitHandler<TaskFormInputs> = (data) => {
-    if (!user) return;
+  const [attributeValues, setAttributeValueStates] = useStateManager(
+    {
+      priorityId: "",
+      statusId: "",
+      sizeId: "",
+    },
+    (changeState) => {
+      return {
+        setPriorityId(id: string) {
+          changeState("priorityId", function () {
+            return id;
+          });
+        },
+        setSizeId(id: string) {
+          changeState("sizeId", function () {
+            return id;
+          });
+        },
+        setStatusId(id: string) {
+          changeState("statusId", function () {
+            return id;
+          });
+        },
+      };
+    }
+  );
+
+  const onSubmit: SubmitHandler<any> = (data) => {
+    // if (!user) return;
+
+    console.log("New task:", data);
 
     const newTask = {
       ...data,
-      userId: user?.id,
+      ...attributeValues,
+      creatorId: user?.id,
       isComplete: false,
     };
-    updateIsResponding(true);
-    UserAPI.createTask(newTask).then((payload) => {
-      if (payload) addTask(payload.data);
-      updateIsResponding(false);
-    });
+
+    console.log("New task:", newTask);
+
+    // updateIsResponding(true);
+    // UserAPI.createTask(newTask).then((payload) => {
+    //   if (payload) addTask(payload.data);
+    //   updateIsResponding(false);
+    // });
   };
 
   return (
@@ -56,56 +111,118 @@ export default function TaskFormDialog() {
         <DialogTitle>Create new item</DialogTitle>
         <DialogDescription>Manage your work better</DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            {...register("name")}
+      <form className="flex flex-col w-full" onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid w-full items-center gap-1.5 mb-2">
+          <p className="font-semibold">Information</p>
+          <Input
+            className="w-full"
             type="text"
-            name="name"
-            id="taskName"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=""
-            autoComplete="off"
-            required
+            id="name"
+            placeholder="Your task name..."
+            {...register("name", { required: true })}
           />
-          <label
-            htmlFor="taskName"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Name of task
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <textarea
-            {...register("description")}
-            name="description"
-            id="taskDescription"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            autoComplete="off"
+          <Textarea
+            placeholder="Description"
+            id="message"
+            {...register("description", { required: true })}
           />
-          <label
-            htmlFor="taskDescription"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Task's Description
-          </label>
         </div>
         <div>
-          <Button
-            type="submit"
-            disabled={isResponding}
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-3 text-center"
-          >
-            {isResponding ? (
-              <div className="flex justify-center items-center">
-                <LoadingSpinner width="w-4" height="w-4" />
-                <span className="ms-3">Adding...</span>
-              </div>
-            ) : (
-              "Add new task"
-            )}
-          </Button>
+          <p className="font-semibold">Attributes</p>
+          <div className="flex items-center justify-between ps-3 mb-2">
+            <p>Status</p>
+            <Select
+              onValueChange={(value) =>
+                setAttributeValueStates.setStatusId(value)
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Status</SelectLabel>
+                  {taskStatuses &&
+                    taskStatuses.map((status) => (
+                      <SelectItem key={status._id} value={status._id}>
+                        <TaskStatusBadge
+                          className="cursor-pointer"
+                          data={status}
+                        />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center justify-between ps-3 mb-2">
+            <p>Priority</p>
+            <Select
+              onValueChange={(value) =>
+                setAttributeValueStates.setPriorityId(value)
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Priority</SelectLabel>
+                  {taskPriorities &&
+                    taskPriorities.map((priority) => (
+                      <SelectItem key={priority._id} value={priority._id}>
+                        <TaskPriorityBadge
+                          className="cursor-pointer"
+                          data={priority}
+                        />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center justify-between ps-3 mb-2">
+            <p>Size</p>
+            <Select
+              onValueChange={(value) =>
+                setAttributeValueStates.setSizeId(value)
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select size" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Size</SelectLabel>
+                  {taskSizes &&
+                    taskSizes.map((size) => (
+                      <SelectItem key={size._id} value={size._id}>
+                        <TaskSizeBadge className="cursor-pointer" data={size} />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        <div>
+          <p className="font-semibold">Duration</p>
+        </div>
+        <Button
+          type="submit"
+          className="w-full mt-3"
+          variant={isResponding ? "ghost" : "default"}
+          disabled={isResponding}
+        >
+          {isResponding ? (
+            <div className="flex justify-center items-center">
+              <LoadingSpinner width="w-4" height="w-4" />
+              <span className="ms-3">Adding...</span>
+            </div>
+          ) : (
+            "Create"
+          )}
+        </Button>
       </form>
     </DialogContent>
   );

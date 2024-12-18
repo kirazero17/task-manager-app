@@ -3,8 +3,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, PencilLine } from "lucide-react";
 
 // Import components
-import { Button } from "src/components/ui/button";
-import { Badge } from "src/components/ui/badge";
+import {
+  TaskSizeBadge,
+  TaskPriorityBadge,
+  TaskStatusBadge,
+} from "./task-attribute-badges";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -147,16 +150,9 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       const { taskPriorities } = useTaskState();
       const priority = row.getValue("priority") as any;
 
-      let priorityClassName = "";
-      let priorityColor = TaskUtils.getPriorityColor(priority);
-
-      if (priorityColor) priorityClassName += " " + priorityColor;
-
       return (
         <div className="flex items-center justify-between">
-          <Badge className={priorityColor} variant="outline">
-            {priority.name}
-          </Badge>
+          <TaskPriorityBadge data={priority} />
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <ChevronDown size="16px" color="gray" />
@@ -166,12 +162,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
               <DropdownMenuSeparator />
               {taskPriorities?.map((priority) => (
                 <DropdownMenuItem className="cursor-pointer" key={priority._id}>
-                  <Badge
-                    className={TaskUtils.getPriorityColor(priority)}
-                    variant="outline"
-                  >
-                    {priority.name}
-                  </Badge>
+                  <TaskPriorityBadge data={priority} />
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -187,16 +178,9 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       const { taskStatuses } = useTaskState();
       const status = row.getValue("status") as any;
 
-      let statusClassName = "";
-      let statusColor = TaskUtils.getStatusColor(status);
-
-      if (statusColor) statusClassName += " " + statusColor;
-
       return (
         <div className="flex items-center justify-between">
-          <Badge className={statusColor} variant="outline">
-            {status.name}
-          </Badge>
+          <TaskStatusBadge data={status} />
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <ChevronDown size="16px" color="gray" />
@@ -206,12 +190,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
               <DropdownMenuSeparator />
               {taskStatuses?.map((status) => (
                 <DropdownMenuItem className="cursor-pointer" key={status._id}>
-                  <Badge
-                    className={TaskUtils.getStatusColor(status)}
-                    variant="outline"
-                  >
-                    {status.name}
-                  </Badge>
+                  <TaskStatusBadge data={status} />
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -227,16 +206,9 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       const { taskSizes } = useTaskState();
       const size = row.getValue("size") as any;
 
-      let sizeClassName = "w-5 h-5 rounded-full border border-[3px]";
-      let sizeColor = TaskUtils.getSizeColor(size);
-
-      if (sizeColor) sizeClassName += " " + sizeColor;
-
       return (
         <div className="flex items-center justify-between">
-          <Badge className={sizeColor} variant="outline">
-            {size.name}
-          </Badge>
+          <TaskSizeBadge data={size} />
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer" asChild>
               <ChevronDown size="16px" color="gray" />
@@ -246,12 +218,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
               <DropdownMenuSeparator />
               {taskSizes?.map((size) => (
                 <DropdownMenuItem className="cursor-pointer" key={size._id}>
-                  <Badge
-                    className={TaskUtils.getSizeColor(size)}
-                    variant="outline"
-                  >
-                    {size.name}
-                  </Badge>
+                  <TaskSizeBadge data={size} />
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
