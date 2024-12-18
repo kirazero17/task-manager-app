@@ -63,6 +63,7 @@ export type TaskPriorityType = TaskPriorityModelType;
 
 export type TaskStatusModelType = {
   _id: string;
+  order: number;
   name: string;
   value: string;
   createdAt: number;

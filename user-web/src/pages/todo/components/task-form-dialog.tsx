@@ -2,6 +2,15 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 // Import components
 import LoadingSpinner from "src/components/loading-spinner";
+import { Button } from "src/components/ui/button";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "src/components/ui/dialog";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
@@ -17,7 +26,7 @@ type TaskFormInputs = {
   description: string;
 };
 
-export default function TaskForm() {
+export default function TaskFormDialog() {
   const { addTask, isResponding, updateIsResponding } = useTaskState();
   const { user } = useAuth();
   const {
@@ -42,7 +51,11 @@ export default function TaskForm() {
   };
 
   return (
-    <div className="border-b border-b-2 pb-3 mb-6">
+    <DialogContent className="border-b border-b-2 pb-3 mb-6">
+      <DialogHeader>
+        <DialogTitle>Create new item</DialogTitle>
+        <DialogDescription>Manage your work better</DialogDescription>
+      </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="relative z-0 w-full mb-5 group">
           <input
@@ -78,7 +91,7 @@ export default function TaskForm() {
           </label>
         </div>
         <div>
-          <button
+          <Button
             type="submit"
             disabled={isResponding}
             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-3 text-center"
@@ -91,9 +104,9 @@ export default function TaskForm() {
             ) : (
               "Add new task"
             )}
-          </button>
+          </Button>
         </div>
       </form>
-    </div>
+    </DialogContent>
   );
 }

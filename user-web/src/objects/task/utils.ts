@@ -56,10 +56,14 @@ export class TaskUtils {
    * @param status
    * @returns
    */
-  static getStatusCircleColor(status: TaskStatusType) {
+  static getStatusColor(status: TaskStatusType | string) {
     let result = "";
+    let value = "";
 
-    switch (status.value) {
+    if (typeof status === "string") value = status;
+    else value = status.value;
+
+    switch (value) {
       case "not_started": {
         result = `border-gray-400 bg-gray-100`;
         break;
@@ -95,16 +99,21 @@ export class TaskUtils {
   }
 
   /**
-   * Get background & text color of Priority badge
-   * @param task
+   * Get background & text color of Priority
+   * @param target
    * @returns
    */
-  static getPriorityBadgeColor(task?: TaskType | null) {
+  static getPriorityColor(target?: TaskType | TaskPriorityType | null) {
     let result = "";
+    let value = "";
 
-    if (!task) return result;
+    if (!target) return result;
+    if ((target as TaskType).priority)
+      value = (target as TaskType).priority.value;
+    if ((target as TaskPriorityType).value)
+      value = (target as TaskPriorityType).value;
 
-    switch (task?.priority.value) {
+    switch (value) {
       case "p0": {
         result = `bg-red-700 text-white`;
         break;
@@ -135,16 +144,19 @@ export class TaskUtils {
   }
 
   /**
-   * Get outline / borer & text color of Size badge
-   * @param task
+   * Get outline / borer & text color of Size
+   * @param target
    * @returns
    */
-  static getSizeBadgeColor(task?: TaskType | null) {
+  static getSizeColor(target?: TaskType | TaskSizeType | null) {
     let result = "";
+    let value = "";
 
-    if (!task) return result;
+    if (!target) return result;
+    if ((target as TaskType).size) value = (target as TaskType).size.value;
+    if ((target as TaskSizeType).value) value = (target as TaskSizeType).value;
 
-    switch (task?.size.value) {
+    switch (value) {
       case "xxs": {
         result = `bg-lime-50 border-lime-700 text-lime-700`;
         break;

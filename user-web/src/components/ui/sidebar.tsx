@@ -313,8 +313,8 @@ const SidebarTrigger = React.forwardRef<
           {parts.length > 0 &&
             parts.map((part) => (
               <>
-                <BreadcrumbSeparator key={part} />
-                <BreadcrumbItem>
+                <BreadcrumbSeparator key={`${part}-seperator`} />
+                <BreadcrumbItem key={`${part}-item`}>
                   <BreadcrumbLink
                     className="cursor-pointer"
                     onClick={() => navigate(`/${part}`)}

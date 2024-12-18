@@ -121,6 +121,8 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         let tasksByStatus;
 
         if (statuses) {
+          statuses.sort((a, b) => a.order - b.order);
+
           tasksByStatus = new Map<string, Array<TaskType> | null>(
             statuses.map((priority) => [priority.value, null])
           );

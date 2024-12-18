@@ -17,7 +17,7 @@ type TaskCardProps = {
   data: TaskType;
 };
 
-export default function ColumnViewTaskCard(props: TaskCardProps) {
+export default function BoardViewTaskCard(props: TaskCardProps) {
   const { isResponding, updateIsResponding, deteteTask, updateTask } =
     useTaskState();
 
@@ -55,7 +55,7 @@ export default function ColumnViewTaskCard(props: TaskCardProps) {
         <div className="mt-2">
           {props.data.priority && (
             <Badge
-              className={TaskUtils.getPriorityBadgeColor(props.data) + " me-2"}
+              className={TaskUtils.getPriorityColor(props.data) + " me-2"}
               variant="default"
             >
               {props.data.priority.name}
@@ -63,7 +63,7 @@ export default function ColumnViewTaskCard(props: TaskCardProps) {
           )}
           {props.data.size && (
             <Badge
-              className={TaskUtils.getSizeBadgeColor(props.data)}
+              className={TaskUtils.getSizeColor(props.data)}
               variant="outline"
             >
               {props.data.size.name}

@@ -23,26 +23,32 @@ db.createCollection("TaskPriority");
 // Insert some default value
 db.TaskStatus.insertMany([
   {
+    order: 0,
     name: "Not Started",
     value: "not_started",
   },
   {
+    order: 1,
     name: "Considering",
     value: "considering",
   },
   {
+    order: 5,
     name: "Bug",
     value: "bug",
   },
   {
+    order: 4,
     name: "Drop",
     value: "drop",
   },
   {
+    order: 3,
     name: "Done",
     value: "done",
   },
   {
+    order: 2,
     name: "In Process",
     value: "in_process",
   },

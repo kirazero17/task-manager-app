@@ -1,7 +1,7 @@
 import React from "react";
 
 // Import components
-import TaskCard from "./column-view-task-card";
+import TaskCard from "./board-view-task-card";
 import TaskCardSkeleton from "./TaskCardSkeleton";
 
 // Import objects

@@ -1,21 +1,24 @@
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Plus } from "lucide-react";
 
 // Import objects
 import { TaskUtils } from "src/objects/task/utils";
 
 // Import components
-import ColumnViewTaskCard from "./board-view-task-card";
+import TaskFormDialog from "./task-form-dialog";
+import BoardViewTaskCard from "./board-view-task-card";
 import AddItem from "./add-item";
 import { Button } from "src/components/ui/button";
+import { DialogTrigger } from "src/components/ui/dialog";
 
 // Import states
 import { useTaskState } from "src/states/task";
 
-export default function TimelineView() {
+export default function BoardView() {
   const { tasksByStatus, taskStatuses } = useTaskState();
 
   return (
     <div className="relative w-full flex flex-1 border px-3 py-2 bg-secondary rounded-lg  overflow-x-auto">
+      <TaskFormDialog />
       <div className="flex flex-1">
         {tasksByStatus === null ? (
           <p>Loading...</p>
@@ -60,13 +63,15 @@ export default function TimelineView() {
                       <p>Loading...</p>
                     ) : (
                       tasks.map((task) => {
-                        return (
-                          <ColumnViewTaskCard key={task._id} data={task} />
-                        );
+                        return <BoardViewTaskCard key={task._id} data={task} />;
                       })
                     )}
                   </div>
-                  <AddItem />
+                  <DialogTrigger className="w-full">
+                    <Button className="w-full" variant="outline">
+                      <Plus /> Add new item
+                    </Button>
+                  </DialogTrigger>
                 </div>
               );
             })

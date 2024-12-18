@@ -7,9 +7,14 @@ import App from "./App.tsx";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 
+// Import components
+import { Dialog } from "src/components/ui/dialog";
+
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <App />
-    <ToastContainer />
+    <Dialog>
+      <App />
+      <ToastContainer />
+    </Dialog>
   </BrowserRouter>
 );

@@ -3,10 +3,10 @@ import { CircleAlert, Moon } from "lucide-react";
 import cn from "classnames";
 
 // Import components
-import ColumnView from "./components/column-view";
+import BoardView from "./components/board-view";
 import TimelineView from "./components/timeline-view";
 import TableView from "./components/table-view";
-import TaskForm from "./components/task-form";
+import TaskForm from "./components/task-form-dialog";
 import { Button } from "src/components/ui/button";
 import { Progress } from "src/components/ui/progress";
 import {
@@ -15,6 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "src/components/ui/tabs";
+import { Input } from "src/components/ui/input";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
@@ -26,7 +27,11 @@ export default function TodoPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signout } = useAuth();
-  const { clearTasks } = useTaskState();
+  const { tasks, tasksByStatus, clearTasks } = useTaskState();
+
+  const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
+  let totalTask = tasks ? tasks.length : 0;
+  let totalCompleteTask = completeTasks ? completeTasks.length : 0;
 
   return (
     <div className="w-full h-[calc(100dvh-28px)] flex flex-col px-2 py-3">
@@ -34,8 +39,13 @@ export default function TodoPage() {
         <div className="w-1/4">
           <h1 className="text-lg font-bold">Tasks</h1>
           <div className="flex items-center">
-            <Progress value={33} className="w-full h-[6px] me-3" />
-            <span className="text-xs">3/10</span>
+            <Progress
+              value={totalCompleteTask}
+              className="w-full h-[6px] me-3"
+            />
+            <span className="text-xs">
+              {totalCompleteTask}/{totalTask}
+            </span>
           </div>
         </div>
         <div className="flex justify-end gap-2 w-3/4">
@@ -51,26 +61,32 @@ export default function TodoPage() {
 
       <hr className="my-3" />
       <section className="flex flex-1 overflow-hidden">
-        <Tabs defaultValue="default" className="w-full flex flex-col">
-          <TabsList className="w-fit">
-            <TabsTrigger value="default">Default</TabsTrigger>
-            <TabsTrigger value="timeline">Timeline</TabsTrigger>
-            <TabsTrigger value="table">Table</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="board" className="w-full flex flex-col">
+          <div className="flex justify-between items-center">
+            <TabsList className="w-fit">
+              <TabsTrigger value="board">Board</TabsTrigger>
+              <TabsTrigger value="table">Table</TabsTrigger>
+            </TabsList>
+            <div className="flex w-full max-w-sm items-center space-x-2 py-1">
+              <Input className="w-full" type="text" placeholder="Filter:" />
+              <div className="flex items-center">
+                <Button className="me-2" variant="outline" type="submit">
+                  Clear
+                </Button>
+                <Button variant="default" type="submit">
+                  Save
+                </Button>
+              </div>
+            </div>
+          </div>
           <TabsContent
             className="overflow-hidden data-[state=active]:flex data-[state=active]:flex-1"
-            value="default"
+            value="board"
           >
-            <ColumnView />
+            <BoardView />
           </TabsContent>
           <TabsContent
-            className="data-[state=active]:flex data-[state=active]:flex-1"
-            value="timeline"
-          >
-            <TimelineView />
-          </TabsContent>
-          <TabsContent
-            className="data-[state=active]:flex data-[state=active]:flex-1"
+            className="overflow-auto data-[state=active]:flex data-[state=active]:flex-1"
             value="table"
           >
             <TableView />
