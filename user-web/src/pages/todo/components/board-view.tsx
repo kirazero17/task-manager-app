@@ -1,3 +1,4 @@
+import React from "react";
 import { Ellipsis, Plus } from "lucide-react";
 
 // Import objects
@@ -14,6 +15,9 @@ import { useTaskState } from "src/states/task";
 
 export default function BoardView() {
   const { tasksByStatus, taskStatuses, setCurrentTask } = useTaskState();
+  const columnRefs = React.useRef<Map<string, HTMLDivElement | null>>(
+    new Map()
+  );
 
   return (
     <div className="relative w-full flex flex-1 border p-2 bg-secondary rounded-lg overflow-x-auto">
@@ -41,7 +45,28 @@ export default function BoardView() {
 
               return (
                 <div
+                  ref={(ref) => columnRefs.current.set(status.name, ref)}
                   key={status.value}
+                  onDragOver={(e) => {
+                    let element = columnRefs.current.get(status.name);
+                    if (element) {
+                      element.classList.add(
+                        "outline",
+                        "outline-2",
+                        "outline-primary"
+                      );
+                    }
+                  }}
+                  onDragLeave={(e) => {
+                    let element = columnRefs.current.get(status.name);
+                    if (element) {
+                      element.classList.remove(
+                        "outline",
+                        "outline-2",
+                        "outline-primary"
+                      );
+                    }
+                  }}
                   className="flex flex-col bg-white rounded-lg border w-[420px] min-w-[420px] h-full me-3 px-3 pt-5 pb-3 overflow-y-hidden"
                 >
                   <header className="flex flex-col">

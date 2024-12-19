@@ -18,11 +18,33 @@ type TaskCardProps = {
 
 export default function BoardViewTaskCard(props: TaskCardProps) {
   const { setCurrentTask } = useTaskState();
+  const draggableCardRef = React.useRef<HTMLDivElement | null>(null);
+
+  const handleDragStart = (e: React.DragEvent) => {
+    if (draggableCardRef.current) {
+      e.dataTransfer.setData("taskId", props.data._id);
+    }
+  };
 
   return (
     <div
+      ref={draggableCardRef}
       draggable
-      className="flex cursor-grab shadow w-full justify-between ps-3 pe-1 py-2 rounded-lg border mb-3"
+      onDragStart={handleDragStart}
+      onMouseDown={() => {
+        if (draggableCardRef.current) {
+          draggableCardRef.current.classList.add("border-2", "border-primary");
+        }
+      }}
+      onDragEnd={() => {
+        if (draggableCardRef.current) {
+          draggableCardRef.current.classList.remove(
+            "border-2",
+            "border-primary"
+          );
+        }
+      }}
+      className="flex cursor-grab bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
     >
       <section className="w-4/5">
         <DialogTrigger onClick={() => setCurrentTask(props.data)}>
