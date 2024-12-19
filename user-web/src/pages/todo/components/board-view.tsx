@@ -17,7 +17,7 @@ export default function BoardView() {
   const { tasksByStatus, taskStatuses } = useTaskState();
 
   return (
-    <div className="relative w-full flex flex-1 border px-3 py-2 bg-secondary rounded-lg  overflow-x-auto">
+    <div className="relative w-full flex flex-1 border p-2 bg-secondary rounded-lg overflow-x-auto">
       <TaskFormDialog />
       <div className="flex flex-1">
         {tasksByStatus === null ? (

@@ -1,13 +1,15 @@
 import React from "react";
+import { PencilLine } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 // Import components
 import LoadingSpinner from "src/components/loading-spinner";
+import DatePicker from "src/components/date-picker";
 import {
-  TaskSizeBadge,
-  TaskStatusBadge,
-  TaskPriorityBadge,
-} from "./task-attribute-badges";
+  TaskPrioritySelect,
+  TaskSizeSelect,
+  TaskStatusSelect,
+} from "./task-attributes-select-list";
 import { Input } from "src/components/ui/input";
 import { Textarea } from "src/components/ui/textarea";
 import { Button } from "src/components/ui/button";
@@ -18,15 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "src/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "src/components/ui/select";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
@@ -62,6 +55,8 @@ export default function TaskFormDialog() {
       priorityId: "",
       statusId: "",
       sizeId: "",
+      startAt: new Date(),
+      endAt: new Date(),
     },
     (changeState) => {
       return {
@@ -78,6 +73,16 @@ export default function TaskFormDialog() {
         setStatusId(id: string) {
           changeState("statusId", function () {
             return id;
+          });
+        },
+        setStartAt(time: Date) {
+          changeState("startAt", function () {
+            return time;
+          });
+        },
+        setEndAt(time: Date) {
+          changeState("endAt", function () {
+            return time;
           });
         },
       };
@@ -131,82 +136,57 @@ export default function TaskFormDialog() {
           <p className="font-semibold">Attributes</p>
           <div className="flex items-center justify-between ps-3 mb-2">
             <p>Status</p>
-            <Select
-              onValueChange={(value) =>
-                setAttributeValueStates.setStatusId(value)
-              }
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Status</SelectLabel>
-                  {taskStatuses &&
-                    taskStatuses.map((status) => (
-                      <SelectItem key={status._id} value={status._id}>
-                        <TaskStatusBadge
-                          className="cursor-pointer"
-                          data={status}
-                        />
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <TaskStatusSelect />
           </div>
           <div className="flex items-center justify-between ps-3 mb-2">
             <p>Priority</p>
-            <Select
-              onValueChange={(value) =>
-                setAttributeValueStates.setPriorityId(value)
-              }
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Priority</SelectLabel>
-                  {taskPriorities &&
-                    taskPriorities.map((priority) => (
-                      <SelectItem key={priority._id} value={priority._id}>
-                        <TaskPriorityBadge
-                          className="cursor-pointer"
-                          data={priority}
-                        />
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <TaskPrioritySelect />
           </div>
           <div className="flex items-center justify-between ps-3 mb-2">
             <p>Size</p>
-            <Select
-              onValueChange={(value) =>
-                setAttributeValueStates.setSizeId(value)
-              }
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select size" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Size</SelectLabel>
-                  {taskSizes &&
-                    taskSizes.map((size) => (
-                      <SelectItem key={size._id} value={size._id}>
-                        <TaskSizeBadge className="cursor-pointer" data={size} />
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <TaskSizeSelect />
           </div>
         </div>
         <div>
           <p className="font-semibold">Duration</p>
+          <div className="flex items-center justify-between ps-3 mb-2">
+            <p>Start at</p>
+            <div className="flex items-center">
+              <p className="me-3">
+                {attributeValues.startAt.toLocaleDateString()}
+              </p>
+              <DatePicker
+                TriggerContent={
+                  <PencilLine
+                    className="cursor-pointer"
+                    color="gray"
+                    size="16px"
+                  />
+                }
+                date={attributeValues.startAt}
+                setDate={setAttributeValueStates.setStartAt}
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between ps-3 mb-2">
+            <p>End at</p>
+            <div className="flex items-center">
+              <p className="me-3">
+                {attributeValues.endAt.toLocaleDateString()}
+              </p>
+              <DatePicker
+                TriggerContent={
+                  <PencilLine
+                    className="cursor-pointer"
+                    color="gray"
+                    size="16px"
+                  />
+                }
+                date={attributeValues.endAt}
+                setDate={setAttributeValueStates.setEndAt}
+              />
+            </div>
+          </div>
         </div>
         <Button
           type="submit"

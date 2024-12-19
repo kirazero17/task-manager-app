@@ -1,55 +1,23 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, PencilLine } from "lucide-react";
+import { PencilLine } from "lucide-react";
 
 // Import components
+import DatePicker from "src/components/date-picker";
 import {
   TaskSizeBadge,
   TaskPriorityBadge,
   TaskStatusBadge,
 } from "./task-attribute-badges";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "src/components/ui/dropdown-menu";
+  TaskPriorityDropdownMenu,
+  TaskSizeDropdownMenu,
+  TaskStatusDropdownMenu,
+} from "./task-attributes-select-list";
 import { Input } from "src/components/ui/input";
-import { Calendar } from "src/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "src/components/ui/popover";
-
-// Import objects
-import { TaskUtils } from "src/objects/task/utils";
-
-// Import states
-import { useTaskState } from "src/states/task";
 
 // Import types
 import type { TaskType } from "src/objects/task/types";
-
-export function DatePicker({ date, setDate }: { date: Date; setDate: any }) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <PencilLine className="cursor-pointer" color="gray" size="16px" />
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
-}
 
 export const taskColumns: ColumnDef<TaskType>[] = [
   {
@@ -123,7 +91,13 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       return (
         <div className="flex items-center justify-between">
           <p>{new Date(startAt).toLocaleDateString()}</p>
-          <DatePicker date={date} setDate={setDate} />
+          <DatePicker
+            TriggerContent={
+              <PencilLine className="cursor-pointer" color="gray" size="16px" />
+            }
+            date={date}
+            setDate={setDate}
+          />
         </div>
       );
     },
@@ -138,7 +112,13 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       return (
         <div className="flex items-center justify-between">
           <p>{new Date(endAt).toLocaleDateString()}</p>
-          <DatePicker date={date} setDate={setDate} />
+          <DatePicker
+            TriggerContent={
+              <PencilLine className="cursor-pointer" color="gray" size="16px" />
+            }
+            date={date}
+            setDate={setDate}
+          />
         </div>
       );
     },
@@ -147,26 +127,12 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "priority",
     header: "Priority",
     cell: ({ row }) => {
-      const { taskPriorities } = useTaskState();
       const priority = row.getValue("priority") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskPriorityBadge data={priority} />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="cursor-pointer" asChild>
-              <ChevronDown size="16px" color="gray" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Priority</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {taskPriorities?.map((priority) => (
-                <DropdownMenuItem className="cursor-pointer" key={priority._id}>
-                  <TaskPriorityBadge data={priority} />
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TaskPriorityDropdownMenu />
         </div>
       );
     },
@@ -175,26 +141,12 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const { taskStatuses } = useTaskState();
       const status = row.getValue("status") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskStatusBadge data={status} />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="cursor-pointer" asChild>
-              <ChevronDown size="16px" color="gray" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Status</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {taskStatuses?.map((status) => (
-                <DropdownMenuItem className="cursor-pointer" key={status._id}>
-                  <TaskStatusBadge data={status} />
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TaskStatusDropdownMenu />
         </div>
       );
     },
@@ -203,26 +155,12 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "size",
     header: "Size",
     cell: ({ row }) => {
-      const { taskSizes } = useTaskState();
       const size = row.getValue("size") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskSizeBadge data={size} />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="cursor-pointer" asChild>
-              <ChevronDown size="16px" color="gray" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Size</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {taskSizes?.map((size) => (
-                <DropdownMenuItem className="cursor-pointer" key={size._id}>
-                  <TaskSizeBadge data={size} />
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TaskSizeDropdownMenu />
         </div>
       );
     },

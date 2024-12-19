@@ -7,8 +7,7 @@ import { cn } from "src/lib/utils";
 // Import componnents
 import { Button } from "src/components/ui/button";
 
-export interface AddItemProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export type AddItemProps = {} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const AddItem = React.forwardRef<HTMLButtonElement, AddItemProps>(
   (props, ref) => {
