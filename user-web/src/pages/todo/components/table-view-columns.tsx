@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { PencilLine } from "lucide-react";
 
 // Import components
-import DatePicker from "src/components/date-picker";
+import { DatePicker } from "src/components/date-picker";
 import {
   TaskSizeBadge,
   TaskPriorityBadge,

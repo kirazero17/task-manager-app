@@ -1,9 +1,6 @@
 import React from "react";
 import { Plus } from "lucide-react";
 
-// Import lib/utils
-import { cn } from "src/lib/utils";
-
 // Import componnents
 import { Button } from "src/components/ui/button";
 

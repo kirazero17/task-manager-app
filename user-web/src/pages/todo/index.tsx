@@ -1,12 +1,8 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { CircleAlert, Moon } from "lucide-react";
-import cn from "classnames";
 
 // Import components
 import BoardView from "./components/board-view";
-import TimelineView from "./components/timeline-view";
 import TableView from "./components/table-view";
-import TaskForm from "./components/task-form-dialog";
 import { Button } from "src/components/ui/button";
 import { Progress } from "src/components/ui/progress";
 import {
@@ -17,17 +13,11 @@ import {
 } from "src/components/ui/tabs";
 import { Input } from "src/components/ui/input";
 
-// Import hooks
-import { useAuth } from "src/hooks/use-auth";
-
 // Import states
 import { useTaskState } from "src/states/task";
 
 export default function TodoPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user, signout } = useAuth();
-  const { tasks, tasksByStatus, clearTasks } = useTaskState();
+  const { tasks, tasksByStatus } = useTaskState();
 
   const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
   let totalTask = tasks ? tasks.length : 0;

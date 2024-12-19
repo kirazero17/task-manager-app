@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 // Import components
 import LoadingSpinner from "src/components/loading-spinner";
 import { Button } from "src/components/ui/button";
+import { Input } from "src/components/ui/input";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
@@ -31,7 +32,7 @@ export default function Signup() {
     }
 
     console.log("Data:", data);
-    // signup(data);
+    signup(data);
   };
 
   return (
@@ -49,10 +50,9 @@ export default function Signup() {
           >
             Email
           </label>
-          <input
+          <Input
             type="email"
             id="email"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("email", { required: true })}
           />
           {errors.email && (
@@ -67,10 +67,9 @@ export default function Signup() {
             >
               First name
             </label>
-            <input
+            <Input
               type="text"
               id="firstName"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               {...register("firstName", { required: true })}
             />
             {errors.firstName && (
@@ -84,10 +83,9 @@ export default function Signup() {
             >
               Last name
             </label>
-            <input
+            <Input
               type="text"
               id="lastName"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               {...register("lastName", { required: true })}
             />
             {errors.lastName && (
@@ -103,10 +101,9 @@ export default function Signup() {
           >
             Username
           </label>
-          <input
+          <Input
             type="text"
             id="username"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("username", { required: true })}
           />
           {errors.username && (
@@ -120,10 +117,9 @@ export default function Signup() {
           >
             Password
           </label>
-          <input
+          <Input
             type="password"
             id="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("password", { required: true })}
           />
           {errors.password && (
@@ -137,10 +133,9 @@ export default function Signup() {
           >
             Confirm your password
           </label>
-          <input
+          <Input
             type="password"
             id="confirmedPassword"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("confirmedPassword", { required: true })}
           />
           {errors.password && (

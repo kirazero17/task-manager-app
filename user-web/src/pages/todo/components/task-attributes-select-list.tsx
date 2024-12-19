@@ -19,34 +19,54 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "src/components/ui/dropdown-menu";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "src/components/ui/form";
 
 // Import states
 import { useTaskState } from "src/states/task";
 
-import { cn } from "src/lib/utils";
+// Import type
+import type { UseFormReturn } from "react-hook-form";
 
 type TaskAttributesListProps = {
+  defaultValue?: string;
   onSelect?: (value: any) => void;
+};
+
+type TaskAttributesListFormProps = {
+  name: string;
+  form: UseFormReturn;
 };
 
 /**
  * Render a priority select for task
  * @returns
  */
-export function TaskPrioritySelect() {
+export function TaskPrioritySelect(props: TaskAttributesListProps) {
   const { taskPriorities } = useTaskState();
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   return React.useMemo(
     () => (
-      <Select value={value} onValueChange={(value) => setValue(value)}>
+      <Select
+        value={value}
+        onValueChange={(value) => {
+          if (props.onSelect) props.onSelect(value);
+          setValue(value);
+        }}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
@@ -56,7 +76,10 @@ export function TaskPrioritySelect() {
             {taskPriorities &&
               taskPriorities.map((priority) => (
                 <SelectItem key={priority._id} value={priority._id}>
-                  <TaskStatusBadge className="cursor-pointer" data={priority} />
+                  <TaskPriorityBadge
+                    className="cursor-pointer"
+                    data={priority}
+                  />
                 </SelectItem>
               ))}
           </SelectGroup>
@@ -68,22 +91,66 @@ export function TaskPrioritySelect() {
 }
 
 /**
+ * Render a status select for task form
+ * @returns
+ */
+export function TaskPriorityFormSelect(props: TaskAttributesListFormProps) {
+  const { taskPriorities } = useTaskState();
+
+  return React.useMemo(
+    () => (
+      <FormField
+        control={props.form.control}
+        name={props.name}
+        render={({ field }) => (
+          <FormItem>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Priority</SelectLabel>
+                  {taskPriorities &&
+                    taskPriorities.map((priority) => (
+                      <SelectItem key={priority._id} value={priority._id}>
+                        <TaskPriorityBadge
+                          className="cursor-pointer"
+                          data={priority}
+                        />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
+    [taskPriorities]
+  );
+}
+
+/**
  * Render a dropdown menu of priority for task
  * @param param0
  * @returns
  */
-export function TaskPriorityDropdownMenu({
-  onSelect,
-}: TaskAttributesListProps) {
+export function TaskPriorityDropdownMenu(props: TaskAttributesListProps) {
   const { taskPriorities } = useTaskState();
-  const [value, setValue] = React.useState<string>("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   if (!Element || !taskPriorities) {
     return <p>Empty list</p>;
   }
 
   React.useEffect(() => {
-    if (onSelect) onSelect(value);
+    if (props.onSelect) props.onSelect(value);
   }, [value]);
 
   return React.useMemo(
@@ -95,7 +162,13 @@ export function TaskPriorityDropdownMenu({
         <DropdownMenuContent>
           <DropdownMenuLabel>Priority</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
+          <DropdownMenuRadioGroup
+            value={value}
+            onValueChange={(value) => {
+              if (props.onSelect) props.onSelect(value);
+              setValue(value);
+            }}
+          >
             {taskPriorities.map((priority) => (
               <DropdownMenuRadioItem
                 value={priority._id}
@@ -116,13 +189,21 @@ export function TaskPriorityDropdownMenu({
  * Render a size select for task
  * @returns
  */
-export function TaskSizeSelect() {
+export function TaskSizeSelect(props: TaskAttributesListProps) {
   const { taskSizes } = useTaskState();
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   return React.useMemo(
     () => (
-      <Select value={value} onValueChange={(value) => setValue(value)}>
+      <Select
+        value={value}
+        onValueChange={(value) => {
+          if (props.onSelect) props.onSelect(value);
+          setValue(value);
+        }}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
@@ -144,20 +225,63 @@ export function TaskSizeSelect() {
 }
 
 /**
+ * Render a status select for task form
+ * @returns
+ */
+export function TaskSizeFormSelect(props: TaskAttributesListFormProps) {
+  const { taskSizes } = useTaskState();
+
+  return React.useMemo(
+    () => (
+      <FormField
+        control={props.form.control}
+        name={props.name}
+        render={({ field }) => (
+          <FormItem>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select size" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Size</SelectLabel>
+                  {taskSizes &&
+                    taskSizes.map((size) => (
+                      <SelectItem key={size._id} value={size._id}>
+                        <TaskSizeBadge className="cursor-pointer" data={size} />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
+    [taskSizes]
+  );
+}
+
+/**
  * Render a dropdown menu of size for task
  * @param param0
  * @returns
  */
-export function TaskSizeDropdownMenu({ onSelect }: TaskAttributesListProps) {
+export function TaskSizeDropdownMenu(props: TaskAttributesListProps) {
   const { taskSizes } = useTaskState();
-  const [value, setValue] = React.useState<string>("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   if (!Element || !taskSizes) {
     return <p>Empty list</p>;
   }
 
   React.useEffect(() => {
-    if (onSelect) onSelect(value);
+    if (props.onSelect) props.onSelect(value);
   }, [value]);
 
   return React.useMemo(
@@ -169,7 +293,13 @@ export function TaskSizeDropdownMenu({ onSelect }: TaskAttributesListProps) {
         <DropdownMenuContent>
           <DropdownMenuLabel>Size</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
+          <DropdownMenuRadioGroup
+            value={value}
+            onValueChange={(value) => {
+              if (props.onSelect) props.onSelect(value);
+              setValue(value);
+            }}
+          >
             {taskSizes.map((size) => (
               <DropdownMenuRadioItem
                 value={size._id}
@@ -190,13 +320,21 @@ export function TaskSizeDropdownMenu({ onSelect }: TaskAttributesListProps) {
  * Render a status select for task
  * @returns
  */
-export function TaskStatusSelect() {
+export function TaskStatusSelect(props: TaskAttributesListProps) {
   const { taskStatuses } = useTaskState();
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   return React.useMemo(
     () => (
-      <Select value={value} onValueChange={(value) => setValue(value)}>
+      <Select
+        value={value}
+        onValueChange={(value) => {
+          if (props.onSelect) props.onSelect(value);
+          setValue(value);
+        }}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
@@ -218,20 +356,66 @@ export function TaskStatusSelect() {
 }
 
 /**
+ * Render a status select for task form
+ * @returns
+ */
+export function TaskStatusFormSelect(props: TaskAttributesListFormProps) {
+  const { taskStatuses } = useTaskState();
+
+  return React.useMemo(
+    () => (
+      <FormField
+        control={props.form.control}
+        name={props.name}
+        render={({ field }) => (
+          <FormItem>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Status</SelectLabel>
+                  {taskStatuses &&
+                    taskStatuses.map((status) => (
+                      <SelectItem key={status._id} value={status._id}>
+                        <TaskStatusBadge
+                          className="cursor-pointer"
+                          data={status}
+                        />
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    ),
+    [taskStatuses]
+  );
+}
+
+/**
  * Render a dropdown menu of status for task
  * @param param0
  * @returns
  */
-export function TaskStatusDropdownMenu({ onSelect }: TaskAttributesListProps) {
+export function TaskStatusDropdownMenu(props: TaskAttributesListProps) {
   const { taskStatuses } = useTaskState();
-  const [value, setValue] = React.useState<string>("");
+  const [value, setValue] = React.useState(
+    props.defaultValue ? props.defaultValue : ""
+  );
 
   if (!Element || !taskStatuses) {
     return <p>Empty list</p>;
   }
 
   React.useEffect(() => {
-    if (onSelect) onSelect(value);
+    if (props.onSelect) props.onSelect(value);
   }, [value]);
 
   return React.useMemo(
@@ -243,7 +427,13 @@ export function TaskStatusDropdownMenu({ onSelect }: TaskAttributesListProps) {
         <DropdownMenuContent>
           <DropdownMenuLabel>Size</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
+          <DropdownMenuRadioGroup
+            value={value}
+            onValueChange={(value) => {
+              if (props.onSelect) props.onSelect(value);
+              setValue(value);
+            }}
+          >
             {taskStatuses.map((status) => (
               <DropdownMenuRadioItem
                 value={status._id}

@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 // Import components
 import LoadingSpinner from "src/components/loading-spinner";
 import { Button } from "src/components/ui/button";
+import { Input } from "src/components/ui/input";
 
 // Import hooks
 import { useAuth } from "src/hooks/use-auth";
@@ -40,10 +41,9 @@ export default function Signin() {
           >
             Username
           </label>
-          <input
+          <Input
             type="text"
             id="username"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("username", { required: true })}
           />
           {errors.username && (
@@ -57,10 +57,9 @@ export default function Signin() {
           >
             Password
           </label>
-          <input
+          <Input
             type="password"
             id="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             {...register("password", { required: true })}
           />
           {errors.password && (

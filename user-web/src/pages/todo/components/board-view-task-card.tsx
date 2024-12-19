@@ -1,17 +1,11 @@
-import { GripVertical } from "lucide-react";
-
-// Import objects
-import { UserAPI } from "src/objects/user/api";
+import React from "react";
+import { Ellipsis } from "lucide-react";
 
 // Import components
-import {
-  TaskSizeBadge,
-  TaskPriorityBadge,
-  TaskStatusBadge,
-} from "./task-attribute-badges";
-import { Badge } from "src/components/ui/badge";
+import { TaskSizeBadge, TaskPriorityBadge } from "./task-attribute-badges";
+import { DialogTrigger } from "src/components/ui/dialog";
 
-// Import states
+// Import hooks
 import { useTaskState } from "src/states/task";
 
 // Import types
@@ -23,37 +17,20 @@ type TaskCardProps = {
 };
 
 export default function BoardViewTaskCard(props: TaskCardProps) {
-  const { isResponding, updateIsResponding, deteteTask, updateTask } =
-    useTaskState();
-
-  const handleDeleteTask = function () {
-    updateIsResponding(true);
-    UserAPI.deleteTask(props.data._id!)
-      .then(() => {
-        deteteTask(props.data._id!);
-        updateIsResponding(false);
-      })
-      .catch(() => updateIsResponding(false));
-  };
-
-  const handleCompleteTask = function () {
-    const newTask = props.data;
-    newTask.isComplete = 1;
-    UserAPI.updateTask(newTask)
-      .then((payload) => {
-        if (payload) updateTask(props.data);
-        updateIsResponding(false);
-      })
-      .then(() => updateIsResponding(false));
-  };
+  const { setCurrentTask } = useTaskState();
 
   return (
-    <div className="flex cursor-pointer shadow w-full justify-between ps-3 pe-1 py-2 rounded-lg border mb-3">
+    <div
+      draggable
+      className="flex cursor-grab shadow w-full justify-between ps-3 pe-1 py-2 rounded-lg border mb-3"
+    >
       <section className="w-4/5">
-        <header>
-          <h3 className="font-bold">{props.data.name}</h3>
-          <p>{props.data.description}</p>
-        </header>
+        <DialogTrigger onClick={() => setCurrentTask(props.data)}>
+          <header className="cursor-pointer text-left hover:underline">
+            <h3 className="font-bold">{props.data.name}</h3>
+            <p>{props.data.description}</p>
+          </header>
+        </DialogTrigger>
         <div>
           <p className="text-xs">{TaskUtils.getStartEndDateStr(props.data)}</p>
         </div>
@@ -65,7 +42,7 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
         </div>
       </section>
       <div className="flex">
-        <GripVertical className="cursor-grab" />
+        <Ellipsis className="cursor-pointer" />
       </div>
     </div>
   );

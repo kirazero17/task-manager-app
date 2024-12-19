@@ -1,6 +1,7 @@
 // Import types
 import type {
   TaskType,
+  TaskModelType,
   TaskPriorityType,
   TaskSizeType,
   TaskStatusType,
@@ -208,5 +209,25 @@ export class TaskUtils {
     let endStr = new Date(task.endAt).toDateString();
 
     return `${startStr} - ${endStr}`;
+  }
+
+  static toModel(task?: TaskType) {
+    if (!task) return;
+
+    let taskModel = { ...task };
+
+    // Add some fields
+    (taskModel as unknown as TaskModelType).creatorId = "";
+    (taskModel as unknown as TaskModelType).sizeId = taskModel.size._id;
+    (taskModel as unknown as TaskModelType).priorityId = taskModel.priority._id;
+    (taskModel as unknown as TaskModelType).statusId = taskModel.status._id;
+
+    // Delete some fields
+    delete (taskModel as Partial<TaskType>).priority;
+    delete (taskModel as Partial<TaskType>).size;
+    delete (taskModel as Partial<TaskType>).status;
+    delete (taskModel as Partial<TaskType>).creator;
+
+    return taskModel;
   }
 }

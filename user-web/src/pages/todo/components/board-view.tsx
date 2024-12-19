@@ -6,7 +6,6 @@ import { TaskUtils } from "src/objects/task/utils";
 // Import components
 import TaskFormDialog from "./task-form-dialog";
 import BoardViewTaskCard from "./board-view-task-card";
-import AddItem from "./add-item";
 import { Button } from "src/components/ui/button";
 import { DialogTrigger } from "src/components/ui/dialog";
 
@@ -14,7 +13,7 @@ import { DialogTrigger } from "src/components/ui/dialog";
 import { useTaskState } from "src/states/task";
 
 export default function BoardView() {
-  const { tasksByStatus, taskStatuses } = useTaskState();
+  const { tasksByStatus, taskStatuses, setCurrentTask } = useTaskState();
 
   return (
     <div className="relative w-full flex flex-1 border p-2 bg-secondary rounded-lg overflow-x-auto">
@@ -68,7 +67,11 @@ export default function BoardView() {
                     )}
                   </div>
                   <DialogTrigger className="w-full">
-                    <Button className="w-full" variant="outline">
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={() => setCurrentTask(null)}
+                    >
                       <Plus /> Add new item
                     </Button>
                   </DialogTrigger>

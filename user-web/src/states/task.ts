@@ -12,6 +12,7 @@ import type {
 } from "src/objects/task/types";
 
 type TaskState = {
+  currentTask: TaskType | null;
   tasks: Array<TaskType> | null;
   tasksByStatus: Map<string, Array<TaskType> | null> | null;
   taskStatuses: Array<TaskStatusType> | null;
@@ -22,6 +23,7 @@ type TaskState = {
 
 type TaskActions = {
   // For task
+  setCurrentTask(task: TaskType | null): void;
   setTasks(tasks: Array<TaskType> | null): void;
   addTask(task: TaskType): void;
   updateTask(task: TaskType): void;
@@ -41,6 +43,7 @@ type TaskActions = {
 
 export const useTaskState = create<TaskState & TaskActions>((set) => {
   return {
+    currentTask: null,
     tasks: null,
     tasksByStatus: null,
     taskStatuses: null,
@@ -49,6 +52,11 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
     isResponding: false,
     updateIsResponding(status?: boolean) {
       set((state) => ({ ...state, isResponding: Boolean(status) }));
+    },
+    setCurrentTask(task) {
+      set((state) => {
+        return { ...state, currentTask: task };
+      });
     },
     setTasks(tasks) {
       set((state) => {

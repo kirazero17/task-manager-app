@@ -7,6 +7,15 @@ import {
   PopoverDialogContent,
   PopoverDialogTrigger,
 } from "src/components/ui/popover-dialog";
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "src/components/ui/form";
+
+// Import types
+import type { UseFormReturn } from "react-hook-form";
 
 type DatePickerProps = {
   TriggerContent: (() => JSX.Element) | JSX.Element;
@@ -14,12 +23,18 @@ type DatePickerProps = {
   setDate: any;
 };
 
+type DatePickerFormProps = {
+  name: string;
+  form: UseFormReturn;
+  TriggerContent: ({ fieldValue }: { fieldValue: any }) => JSX.Element;
+};
+
 /**
  * Render float date picker
  * @param param0
  * @returns
  */
-export default function DatePicker(props: DatePickerProps) {
+export function DatePicker(props: DatePickerProps) {
   let Content = (
     <PencilLine className="cursor-pointer" color="gray" size="16px" />
   );
@@ -42,5 +57,43 @@ export default function DatePicker(props: DatePickerProps) {
         />
       </PopoverDialogContent>
     </PopoverDialog>
+  );
+}
+
+/**
+ * Render float date picker for form
+ * @param param0
+ * @returns
+ */
+export function DatePickerForm({
+  name,
+  form,
+  TriggerContent,
+}: DatePickerFormProps) {
+  return (
+    <FormField
+      name={name}
+      control={form.control}
+      render={({ field }) => (
+        <FormItem>
+          <PopoverDialog>
+            <FormControl>
+              <PopoverDialogTrigger asChild>
+                {TriggerContent && <TriggerContent fieldValue={field.value} />}
+              </PopoverDialogTrigger>
+            </FormControl>
+            <PopoverDialogContent className="w-auto p-0" align="start">
+              <Calendar
+                initialFocus
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+              />
+            </PopoverDialogContent>
+          </PopoverDialog>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }
