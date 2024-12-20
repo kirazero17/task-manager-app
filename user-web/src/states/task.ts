@@ -123,6 +123,11 @@ function addTaskToGroupByOrder(
     tasksGroups.set(task.status.value, taskList);
   }
 
+  if (taskList.length === 0) {
+    taskList.push(task);
+    return;
+  }
+
   let i = 0;
   while (true) {
     // If new task has priority greater than the current task.

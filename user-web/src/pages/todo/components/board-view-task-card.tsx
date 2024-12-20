@@ -1,9 +1,17 @@
 import React from "react";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Trash2 } from "lucide-react";
 
 // Import components
 import { TaskSizeBadge, TaskPriorityBadge } from "./task-attribute-badges";
 import { DialogTrigger } from "src/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "src/components/ui/dropdown-menu";
 
 // Import hooks
 import { useTaskState } from "src/states/task";
@@ -18,13 +26,19 @@ type TaskCardProps = {
 
 function addOutlineClassName(element: any) {
   if (element) {
-    element.classList.add("outline", "outline-2", "outline-primary");
+    element.classList.add(
+      "shadow-[0_0_0_2px_hsl(var(--primary))]",
+      "border-primary"
+    );
   }
 }
 
 function removeOutlineClassName(element: any) {
   if (element) {
-    element.classList.remove("outline", "outline-2", "outline-primary");
+    element.classList.remove(
+      "shadow-[0_0_0_2px_hsl(var(--primary))]",
+      "border-primary"
+    );
   }
 }
 
@@ -52,7 +66,7 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
       onDragEnd={() => {
         removeOutlineClassName(draggableCardRef.current);
       }}
-      className="flex cursor-grab max-w-[375px] bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
+      className="relative flex cursor-grab bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
     >
       <section className="w-4/5">
         <DialogTrigger onClick={() => setCurrentTask(props.data)}>
@@ -74,7 +88,17 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
         </div>
       </section>
       <div className="flex">
-        <Ellipsis className="cursor-pointer" />
+        <DropdownMenu>
+          <DropdownMenuTrigger className="cursor-pointer" asChild>
+            <Ellipsis className="cursor-pointer hover:bg-secondary" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className="flex items-center cursor-pointer">
+              <Trash2 className="text-destructive" />
+              <p className="text-destructive">Delete</p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

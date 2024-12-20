@@ -19,14 +19,20 @@ import TaskStatuses from "src/mock-data/statuses.json";
 function addOutlineClassName(elements: any, statusName: string) {
   let element = elements.get(statusName);
   if (element) {
-    element.classList.add("outline", "outline-2", "outline-primary");
+    element.classList.add(
+      "shadow-[0_0_0_2px_hsl(var(--primary))]",
+      "border-primary"
+    );
   }
 }
 
 function removeOutlineClassName(elements: any, statusName: string) {
   let element = elements.get(statusName);
   if (element) {
-    element.classList.remove("outline", "outline-2", "outline-primary");
+    element.classList.remove(
+      "shadow-[0_0_0_2px_hsl(var(--primary))]",
+      "border-primary"
+    );
   }
 }
 
@@ -104,9 +110,9 @@ export default function BoardView() {
                     // Un-highlight column
                     removeOutlineClassName(columnRefs.current, status.name);
                   }}
-                  className="flex flex-col bg-white rounded-lg border w-[420px] min-w-[420px] h-full me-3 px-3 pt-5 pb-3 overflow-y-hidden"
+                  className="flex flex-col bg-white rounded-lg border w-[420px] min-w-[420px] h-full me-3 pt-5 pb-3 overflow-y-hidden"
                 >
-                  <header className="flex flex-col">
+                  <header className="flex flex-col px-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className={statusCircleClassName}></div>
@@ -119,7 +125,7 @@ export default function BoardView() {
                     <p className="mt-3">Description here</p>
                   </header>
                   <hr className="my-3" />
-                  <div className="flex flex-1 flex-col pt-1 items-center overflow-y-auto">
+                  <div className="flex flex-1 flex-col pt-1 px-3 items-center overflow-y-auto">
                     {tasks === null || !Array.isArray(tasks) ? (
                       <p>Loading...</p>
                     ) : (
@@ -128,7 +134,7 @@ export default function BoardView() {
                       })
                     )}
                   </div>
-                  <DialogTrigger className="w-full">
+                  <DialogTrigger className="w-full px-3">
                     <Button
                       className="w-full"
                       variant="outline"
