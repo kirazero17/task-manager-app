@@ -16,6 +16,18 @@ type TaskCardProps = {
   data: TaskType;
 };
 
+function addOutlineClassName(element: any) {
+  if (element) {
+    element.classList.add("outline", "outline-2", "outline-primary");
+  }
+}
+
+function removeOutlineClassName(element: any) {
+  if (element) {
+    element.classList.remove("outline", "outline-2", "outline-primary");
+  }
+}
+
 export default function BoardViewTaskCard(props: TaskCardProps) {
   const { setCurrentTask } = useTaskState();
   const draggableCardRef = React.useRef<HTMLDivElement | null>(null);
@@ -31,26 +43,24 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
       ref={draggableCardRef}
       draggable
       onDragStart={handleDragStart}
+      onMouseUp={() => {
+        removeOutlineClassName(draggableCardRef.current);
+      }}
       onMouseDown={() => {
-        if (draggableCardRef.current) {
-          draggableCardRef.current.classList.add("border-2", "border-primary");
-        }
+        addOutlineClassName(draggableCardRef.current);
       }}
       onDragEnd={() => {
-        if (draggableCardRef.current) {
-          draggableCardRef.current.classList.remove(
-            "border-2",
-            "border-primary"
-          );
-        }
+        removeOutlineClassName(draggableCardRef.current);
       }}
-      className="flex cursor-grab bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
+      className="flex cursor-grab max-w-[375px] bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
     >
       <section className="w-4/5">
         <DialogTrigger onClick={() => setCurrentTask(props.data)}>
           <header className="cursor-pointer text-left hover:underline">
             <h3 className="font-bold">{props.data.name}</h3>
-            <p>{props.data.description}</p>
+            <p className="text-ellipsis overflow-hidden">
+              {props.data.description}
+            </p>
           </header>
         </DialogTrigger>
         <div>

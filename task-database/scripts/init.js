@@ -56,30 +56,37 @@ db.TaskStatus.insertMany([
 
 db.TaskSize.insertMany([
   {
+    order: 6,
     name: "Super Extra Small",
     value: "xxs",
   },
   {
+    order: 5,
     name: "Extra Small",
     value: "xs",
   },
   {
+    order: 4,
     name: "Small",
     value: "s",
   },
   {
+    order: 3,
     name: "Medium",
     value: "m",
   },
   {
+    order: 2,
     name: "Large",
     value: "l",
   },
   {
+    order: 1,
     name: "Extra Large",
     value: "xl",
   },
   {
+    order: 0,
     name: "Super Extra Large",
     value: "xxl",
   },
@@ -87,22 +94,27 @@ db.TaskSize.insertMany([
 
 db.TaskPriority.insertMany([
   {
+    order: 0,
     name: "P0",
     value: "p0",
   },
   {
+    order: 1,
     name: "P1",
     value: "p1",
   },
   {
+    order: 2,
     name: "P2",
     value: "p2",
   },
   {
+    order: 3,
     name: "P3",
     value: "p3",
   },
   {
+    order: 4,
     name: "P4",
     value: "p4",
   },

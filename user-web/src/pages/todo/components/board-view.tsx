@@ -13,8 +13,35 @@ import { DialogTrigger } from "src/components/ui/dialog";
 // Import states
 import { useTaskState } from "src/states/task";
 
+// Import mockdata
+import TaskStatuses from "src/mock-data/statuses.json";
+
+function addOutlineClassName(elements: any, statusName: string) {
+  let element = elements.get(statusName);
+  if (element) {
+    element.classList.add("outline", "outline-2", "outline-primary");
+  }
+}
+
+function removeOutlineClassName(elements: any, statusName: string) {
+  let element = elements.get(statusName);
+  if (element) {
+    element.classList.remove("outline", "outline-2", "outline-primary");
+  }
+}
+
+/**
+ * Render board view for tasks
+ * @returns
+ */
 export default function BoardView() {
-  const { tasksByStatus, taskStatuses, setCurrentTask } = useTaskState();
+  const {
+    tasks: globalTask,
+    tasksByStatus,
+    taskStatuses,
+    setCurrentTask,
+    updateTask,
+  } = useTaskState();
   const columnRefs = React.useRef<Map<string, HTMLDivElement | null>>(
     new Map()
   );
@@ -47,25 +74,35 @@ export default function BoardView() {
                 <div
                   ref={(ref) => columnRefs.current.set(status.name, ref)}
                   key={status.value}
+                  onDrop={(e) => {
+                    const taskId = e.dataTransfer.getData("taskId");
+
+                    // Send a request to update task
+                    const newTask = {
+                      ...globalTask?.find((task) => task._id === taskId),
+                    };
+                    const newStatus = TaskStatuses.find(
+                      (s) => s.name === status.name
+                    );
+
+                    (newTask as any).status = newStatus;
+
+                    // Update state: move task to order group
+                    updateTask(newTask as any);
+
+                    // Un-highlight column
+                    removeOutlineClassName(columnRefs.current, status.name);
+                  }}
                   onDragOver={(e) => {
-                    let element = columnRefs.current.get(status.name);
-                    if (element) {
-                      element.classList.add(
-                        "outline",
-                        "outline-2",
-                        "outline-primary"
-                      );
-                    }
+                    // Allow drop
+                    e.preventDefault();
+
+                    // Highlight column
+                    addOutlineClassName(columnRefs.current, status.name);
                   }}
                   onDragLeave={(e) => {
-                    let element = columnRefs.current.get(status.name);
-                    if (element) {
-                      element.classList.remove(
-                        "outline",
-                        "outline-2",
-                        "outline-primary"
-                      );
-                    }
+                    // Un-highlight column
+                    removeOutlineClassName(columnRefs.current, status.name);
                   }}
                   className="flex flex-col bg-white rounded-lg border w-[420px] min-w-[420px] h-full me-3 px-3 pt-5 pb-3 overflow-y-hidden"
                 >
@@ -82,7 +119,7 @@ export default function BoardView() {
                     <p className="mt-3">Description here</p>
                   </header>
                   <hr className="my-3" />
-                  <div className="flex flex-1 flex-col overflow-y-auto">
+                  <div className="flex flex-1 flex-col pt-1 items-center overflow-y-auto">
                     {tasks === null || !Array.isArray(tasks) ? (
                       <p>Loading...</p>
                     ) : (

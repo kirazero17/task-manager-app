@@ -27,22 +27,9 @@ export type TaskType = Omit<
   assignees?: Array<any>;
 };
 
-export type NewTaskType = {
-  creatorId: string;
-  priorityId: string;
-  statusId: string;
-  sizeId: string;
-  name: string;
-  description: string;
-  progress: number;
-  startAt: number;
-  endAt: number;
-};
-
-export type UpdateTaskType = Partial<NewTaskType>;
-
 export type TaskSizeModelType = {
   _id: string;
+  order: number;
   name: string;
   value: string;
   createdAt: number;
@@ -53,6 +40,7 @@ export type TaskSizeType = TaskSizeModelType;
 
 export type TaskPriorityModelType = {
   _id: string;
+  order: number;
   name: string;
   value: string;
   createdAt: number;

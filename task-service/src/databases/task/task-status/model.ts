@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 export default function () {
   const TaskStatusSchema = new Schema(
     {
+      order: Schema.Types.Number,
       name: Schema.Types.String,
       value: Schema.Types.String,
       createdAt: {

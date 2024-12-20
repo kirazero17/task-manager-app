@@ -1,6 +1,7 @@
 [
   {
     "_id": "0",
+    "order": 6,
     "name": "Super Extra Small",
     "value": "xxs",
     "createdAt": 1734402915812,
@@ -8,6 +9,7 @@
   },
   {
     "_id": "1",
+    "order": 5,
     "name": "Extra Small",
     "value": "xs",
     "createdAt": 1734402915812,
@@ -15,6 +17,7 @@
   },
   {
     "_id": "2",
+    "order": 4,
     "name": "Small",
     "value": "s",
     "createdAt": 1734402915812,
@@ -22,6 +25,7 @@
   },
   {
     "_id": "3",
+    "order": 3,
     "name": "Medium",
     "value": "m",
     "createdAt": 1734402915812,
@@ -29,6 +33,7 @@
   },
   {
     "_id": "4",
+    "order": 2,
     "name": "Large",
     "value": "l",
     "createdAt": 1734402915812,
@@ -36,6 +41,7 @@
   },
   {
     "_id": "5",
+    "order": 1,
     "name": "Extra Large",
     "value": "xl",
     "createdAt": 1734402915812,
@@ -43,6 +49,7 @@
   },
   {
     "_id": "6",
+    "order": 0,
     "name": "Super Extra Large",
     "value": "xxl",
     "createdAt": 1734402915812,
