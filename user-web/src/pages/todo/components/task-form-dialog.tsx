@@ -85,7 +85,10 @@ export default function TaskFormDialog() {
   }, [currentTask]);
 
   return (
-    <DialogContent className="border-b border-b-2 pb-3 mb-6">
+    <DialogContent
+      onCloseAutoFocus={(e: Event) => e.preventDefault()}
+      className="border-b border-b-2 pb-3 mb-6"
+    >
       <DialogHeader>
         <DialogTitle>Create new item</DialogTitle>
         <DialogDescription>Manage your work better</DialogDescription>

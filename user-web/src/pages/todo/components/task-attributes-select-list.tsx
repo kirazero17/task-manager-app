@@ -171,6 +171,7 @@ export function TaskPriorityDropdownMenu(props: TaskAttributesListProps) {
           >
             {taskPriorities.map((priority) => (
               <DropdownMenuRadioItem
+                key={priority._id}
                 value={priority._id}
                 className="cursor-pointer"
               >
@@ -302,6 +303,7 @@ export function TaskSizeDropdownMenu(props: TaskAttributesListProps) {
           >
             {taskSizes.map((size) => (
               <DropdownMenuRadioItem
+                key={size._id}
                 value={size._id}
                 className="cursor-pointer"
               >
@@ -436,6 +438,7 @@ export function TaskStatusDropdownMenu(props: TaskAttributesListProps) {
           >
             {taskStatuses.map((status) => (
               <DropdownMenuRadioItem
+                key={status._id}
                 value={status._id}
                 className="cursor-pointer"
               >

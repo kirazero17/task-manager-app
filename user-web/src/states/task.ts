@@ -25,6 +25,7 @@ type TaskActions = {
   // For task
   setCurrentTask(task: TaskType | null): void;
   setTasks(tasks: Array<TaskType> | null): void;
+  addTasks(tasks: Array<TaskType> | null): void;
   addTask(task: TaskType): void;
   addTaskToGroup(groupName: string, task: TaskType | string): void;
   updateTask(task: TaskType | string): void;
@@ -228,6 +229,22 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
 
     setTasks(tasks) {
       set((state) => {
+        // If task and state.tasksByStatus are not null,
+        // classify tasks with status
+        if (tasks && state.tasksByStatus)
+          addTasksToGroupByOrder(state.tasksByStatus, tasks);
+
+        return { ...state, tasks: tasks, tasksByStatus: state.tasksByStatus };
+      });
+    },
+
+    addTasks(tasks) {
+      set((state) => {
+        if (!tasks) return state;
+
+        // Add tasks to global tasks
+        if (state.tasks) state.tasks.concat(tasks);
+
         // If task and state.tasksByStatus are not null,
         // classify tasks with status
         if (tasks && state.tasksByStatus)

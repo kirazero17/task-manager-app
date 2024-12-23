@@ -16,10 +16,17 @@ import {
 } from "./task-attributes-select-list";
 import { Input } from "src/components/ui/input";
 
+// Import objects
+import { UserAPI } from "src/objects/user/api";
+
 // Import types
 import type { TaskType } from "src/objects/task/types";
 
 export const taskColumns: ColumnDef<TaskType>[] = [
+  {
+    accessorKey: "_id",
+    header: "id",
+  },
   {
     accessorKey: "name",
     header: "Name",
@@ -127,12 +134,21 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "priority",
     header: "Priority",
     cell: ({ row }) => {
+      const taskId = row.getValue("_id") as string;
       const priority = row.getValue("priority") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskPriorityBadge data={priority} />
-          <TaskPriorityDropdownMenu />
+          <TaskPriorityDropdownMenu
+            onSelect={(value) => {
+              // Request to update task
+              UserAPI.updateTask(taskId, { priorityId: value });
+
+              // Update task in table
+            }}
+            defaultValue={priority._id}
+          />
         </div>
       );
     },
@@ -141,12 +157,21 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
+      const taskId = row.getValue("_id") as string;
       const status = row.getValue("status") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskStatusBadge data={status} />
-          <TaskStatusDropdownMenu />
+          <TaskStatusDropdownMenu
+            onSelect={(value) => {
+              // Request to update task
+              UserAPI.updateTask(taskId, { statusId: value });
+
+              // Update task in table
+            }}
+            defaultValue={status._id}
+          />
         </div>
       );
     },
@@ -155,12 +180,21 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "size",
     header: "Size",
     cell: ({ row }) => {
+      const taskId = row.getValue("_id") as string;
       const size = row.getValue("size") as any;
 
       return (
         <div className="flex items-center justify-between">
           <TaskSizeBadge data={size} />
-          <TaskSizeDropdownMenu />
+          <TaskSizeDropdownMenu
+            onSelect={(value) => {
+              // Request to update task
+              UserAPI.updateTask(taskId, { sizeId: value });
+
+              // Update task in table
+            }}
+            defaultValue={size._id}
+          />
         </div>
       );
     },

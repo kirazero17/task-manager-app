@@ -48,10 +48,14 @@ export class AuthMiddlewares {
    * @param action
    * @returns
    */
-  static createCheckPolicy(resource: string, action: string) {
+  static createPolicyChecker(resource: string, action: string) {
     let that = this;
 
-    return function (req: Request, res: Response, next: NextFunction) {
+    return function checkPolicy(
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) {
       return ErrorUtils.handleJSONResponseError(
         that,
         req,

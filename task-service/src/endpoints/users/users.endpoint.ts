@@ -30,7 +30,7 @@ task().then((models) => {
 usersEndpoints
   .createHandler("")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("admin:*", "admin:getUsers"))
+  .use(AuthMiddlewares.createPolicyChecker("admin:*", "admin:getUsers"))
   .get(async (req, res, o) => {
     const { limit, skip } = RequestUtils.getLimitNSkip(req);
 
@@ -45,7 +45,7 @@ usersEndpoints
 usersEndpoints
   .createHandler(":id")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:getInformation"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getInformation"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -67,7 +67,7 @@ usersEndpoints
 usersEndpoints
   .createHandler(":id/tasks")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:getTasks"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTasks"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -92,7 +92,7 @@ usersEndpoints
 usersEndpoints
   .createHandler(":id/tasks/:taskId")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:getTask"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTask"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -119,7 +119,7 @@ usersEndpoints
 usersEndpoints
   .createHandler("task")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:addTask"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:addTask"))
   .post(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -149,7 +149,7 @@ usersEndpoints
 usersEndpoints
   .createHandler(":id/tasks/:taskId")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:updateTask"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:updateTask"))
   .patch(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -188,7 +188,7 @@ usersEndpoints
 usersEndpoints
   .createHandler(":id/tasks/:taskId")
   .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createCheckPolicy("user:*", "user:deleteTask"))
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:deleteTask"))
   .delete(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;

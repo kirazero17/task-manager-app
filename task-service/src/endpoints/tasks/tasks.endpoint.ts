@@ -5,7 +5,7 @@ import { Endpoints } from "src/classes/Endpoints";
 import task from "src/databases/task";
 
 // Import services
-import * as middlewares from "src/services/auth/middlewares";
+import { AuthMiddlewares } from "src/services/auth/middlewares";
 
 // Import utils
 import { RequestUtils } from "src/utils/request";
@@ -57,8 +57,8 @@ tasksEndpoints.createHandler("sizes").get(async (req, res) => {
  */
 tasksEndpoints
   .createHandler("")
-  .use(middlewares.AuthMiddlewares.checkToken)
-  .use(middlewares.AuthMiddlewares.createCheckPolicy("task:*", "task:getTasks"))
+  .use(AuthMiddlewares.checkToken)
+  .use(AuthMiddlewares.createPolicyChecker("task:*", "task:getTasks"))
   .get(async (req, res) => {
     const { limit, skip } = RequestUtils.getLimitNSkip(req);
 
@@ -74,8 +74,8 @@ tasksEndpoints
  */
 tasksEndpoints
   .createHandler(":id")
-  .use(middlewares.AuthMiddlewares.checkToken)
-  .use(middlewares.AuthMiddlewares.createCheckPolicy("task:*", "task:getTask"))
+  .use(AuthMiddlewares.checkToken)
+  .use(AuthMiddlewares.createPolicyChecker("task:*", "task:getTask"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -94,10 +94,8 @@ tasksEndpoints
  */
 tasksEndpoints
   .createHandler(":id")
-  .use(middlewares.AuthMiddlewares.checkToken)
-  .use(
-    middlewares.AuthMiddlewares.createCheckPolicy("task:*", "task:updateTask")
-  )
+  .use(AuthMiddlewares.checkToken)
+  .use(AuthMiddlewares.createPolicyChecker("task:*", "task:updateTask"))
   .patch(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -130,10 +128,8 @@ tasksEndpoints
  */
 tasksEndpoints
   .createHandler(":id")
-  .use(middlewares.AuthMiddlewares.checkToken)
-  .use(
-    middlewares.AuthMiddlewares.createCheckPolicy("task:*", "task:deleteTask")
-  )
+  .use(AuthMiddlewares.checkToken)
+  .use(AuthMiddlewares.createPolicyChecker("task:*", "task:deleteTask"))
   .delete(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;

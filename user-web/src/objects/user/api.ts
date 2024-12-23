@@ -5,7 +5,7 @@ import { BrowserStorageUtils } from "src/utils/browser_storage";
 
 // Import types
 import type { UserType } from "./types";
-import type { TaskType, NewTaskType, UpdateTaskType } from "../task/types";
+import type { TaskType, TaskModelType } from "../task/types";
 
 const taskManagerAPI = new API({
   baseURL: import.meta.env.VITE_TASK_SERVICE_ENDPOINT,
@@ -22,6 +22,10 @@ export class UserAPI {
     return user;
   }
 
+  /**
+   * Use to get a user from identity service
+   * @returns
+   */
   static async getUser() {
     try {
       const user = UserAPI.getLocalUser();
@@ -36,11 +40,20 @@ export class UserAPI {
     }
   }
 
-  static async getTasks() {
+  /**
+   * Get tasks of a user
+   * @returns
+   */
+  static async getTasks(params?: Record<string, any>) {
+    if (!params) params = {};
+    if (!params.limit) params.limit = 10;
+    if (!params.skip) params.skip = 0;
+
     try {
       const user = UserAPI.getLocalUser();
+      const paramsStr = new URLSearchParams(params);
       const response = await taskManagerAPI.get<Array<TaskType>>(
-        `/users/${user.id}/tasks`,
+        `/users/${user.id}/tasks?${paramsStr}`,
         {
           headers: {
             Authorization: API.generateBearerToken(API.getToken()) as string,
@@ -53,6 +66,11 @@ export class UserAPI {
     }
   }
 
+  /**
+   * Get a task of user by its id
+   * @param taskId
+   * @returns
+   */
   static async getTask(taskId: string | number) {
     try {
       const user = UserAPI.getLocalUser();
@@ -70,10 +88,15 @@ export class UserAPI {
     }
   }
 
-  static async createTask(task: NewTaskType) {
+  /**
+   * Create a new task for user
+   * @param task
+   * @returns
+   */
+  static async createTask(task: TaskModelType) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await taskManagerAPI.post<NewTaskType, TaskType>(
+      const response = await taskManagerAPI.post<TaskModelType, TaskType>(
         `/users/${user.id}/task`,
         task,
         {
@@ -88,24 +111,34 @@ export class UserAPI {
     }
   }
 
-  static async updateTask(id: string, task: UpdateTaskType) {
+  /**
+   * Update a task of user
+   * @param id
+   * @param task
+   * @returns
+   */
+  static async updateTask(id: string, task: Partial<TaskModelType>) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await taskManagerAPI.patch<UpdateTaskType, TaskType>(
-        `/users/${user.id}/tasks/${id}`,
-        task,
-        {
-          headers: {
-            Authorization: API.generateBearerToken(API.getToken()) as string,
-          },
-        }
-      );
+      const response = await taskManagerAPI.patch<
+        Partial<TaskModelType>,
+        TaskType
+      >(`/users/${user.id}/tasks/${id}`, task, {
+        headers: {
+          Authorization: API.generateBearerToken(API.getToken()) as string,
+        },
+      });
       return response.data;
     } catch (error) {
       return;
     }
   }
 
+  /**
+   * Delete a task of user
+   * @param taskId
+   * @returns
+   */
   static async deleteTask(taskId: string) {
     try {
       const user = UserAPI.getLocalUser();
