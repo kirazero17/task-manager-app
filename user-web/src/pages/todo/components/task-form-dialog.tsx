@@ -38,7 +38,7 @@ import { UserAPI } from "src/objects/user/api";
 import { useTaskState } from "src/states/task";
 
 export default function TaskFormDialog() {
-  const { currentTask, isResponding, addTask, updateIsResponding } =
+  const { currentTask, isResponding, addTask, updateTask, updateIsResponding } =
     useTaskState();
   const { user } = useAuth();
   const form = useForm<any>({
@@ -52,20 +52,26 @@ export default function TaskFormDialog() {
   });
 
   const onSubmit: SubmitHandler<any> = (data) => {
-    // if (!user) return;
+    if (!user) return;
 
     const newTask = {
       ...data,
       creatorId: user?.id,
     };
 
-    console.log("New task:", newTask);
+    updateIsResponding(true);
 
-    // updateIsResponding(true);
-    UserAPI.createTask(newTask).then((payload) => {
-      if (payload) addTask(payload.data);
-      updateIsResponding(false);
-    });
+    // Create new tasks
+    if (!currentTask || (currentTask && currentTask._id))
+      UserAPI.createTask(newTask).then((payload) => {
+        if (payload) addTask(payload.data);
+        updateIsResponding(false);
+      });
+    else
+      UserAPI.updateTask(currentTask._id, newTask).then((payload) => {
+        if (payload) updateTask(payload.data);
+        updateIsResponding(false);
+      });
   };
 
   React.useEffect(() => {
@@ -157,11 +163,7 @@ export default function TaskFormDialog() {
                       <p className="me-3">
                         {new Date(fieldValue).toLocaleDateString()}
                       </p>
-                      <PencilLine
-                        className="cursor-pointer"
-                        color="gray"
-                        size="16px"
-                      />
+                      <PencilLine color="gray" size="16px" />
                     </div>
                   );
                 }}
@@ -178,11 +180,7 @@ export default function TaskFormDialog() {
                       <p className="me-3">
                         {new Date(fieldValue).toLocaleDateString()}
                       </p>
-                      <PencilLine
-                        className="cursor-pointer"
-                        color="gray"
-                        size="16px"
-                      />
+                      <PencilLine color="gray" size="16px" />
                     </div>
                   );
                 }}

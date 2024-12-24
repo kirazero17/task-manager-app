@@ -42,18 +42,11 @@ type Response<Data> = {
   code: number;
 };
 
-let _instance: API | null = null;
-
 export class API {
   private _http!: Axios;
 
   constructor(config?: AxiosRequestConfig) {
-    if (_instance) return _instance;
-
     this._http = axios.create(config);
-
-    // Place this in the last line
-    _instance = this;
   }
 
   static getToken(name: string = "tkn") {
@@ -64,15 +57,6 @@ export class API {
     const result = `Bearer ${token}`;
     if (isHTTPHeader) return { Authorization: result };
     return result;
-  }
-
-  /**
-   * Get valid URL
-   * @param paths
-   * @returns
-   */
-  private _getURL(...paths: Array<string>) {
-    return StringUtils.formatURL(this._http.defaults.baseURL || "", ...paths);
   }
 
   /**

@@ -4,6 +4,7 @@ import { Model } from "sequelize";
 import type { Sequelize, DataTypes } from "sequelize";
 
 type AssociationType = {
+  object: string;
   name: string;
   type: string;
   foreignKey: string;
@@ -16,7 +17,7 @@ export default function (sequelize: Sequelize, dataTypes: typeof DataTypes) {
     // Define static functions
     static associate(models: any, objects: any) {
       for (const association of associations) {
-        const model = models[association.name];
+        const model = models[association.object];
 
         if (!model)
           throw new Error(`The ${association.name} doesn't exist`);

@@ -87,13 +87,14 @@ export default function RootRoutes() {
   React.useEffect(() => {
     const token = CookieUtils.readCookie(CookieUtils.TOKEN_NAME + "tkn");
     if (token) {
-      signin({ token });
+      signin();
     }
   }, []);
 
-  return useRoutes(authenticatedRoutes);
+  if (import.meta.env.VITE_MODE === "dev")
+    return useRoutes(authenticatedRoutes);
 
-  // return isAuthenticated
-  //   ? useRoutes(authenticatedRoutes)
-  //   : useRoutes(unAuthenticatedRoutes);
+  return isAuthenticated
+    ? useRoutes(authenticatedRoutes)
+    : useRoutes(unAuthenticatedRoutes);
 }

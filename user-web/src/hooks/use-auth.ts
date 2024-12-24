@@ -2,8 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Import API
-import { API } from "src/api";
+// Import objects
+import { AuthAPI } from "src/objects/auth/api";
 
 // Import state
 import { useAuthState } from "src/states/auth";
@@ -17,22 +17,7 @@ import type {
   UserType,
   SignInUserType,
   SignUpUserType,
-  AuthenticationDataType,
 } from "src/objects/user/types";
-
-const api = new API({
-  baseURL: import.meta.env.VITE_API_ENDPOINT,
-});
-
-// Add global hook to api
-api.hook("response", undefined, function (error) {
-  const message = error?.response.data.error.message;
-  toast.error(message, {
-    position: "top-center",
-    autoClose: 5000,
-  });
-  return Promise.reject(error);
-});
 
 export function useAuth() {
   const navigate = useNavigate();
@@ -45,17 +30,25 @@ export function useAuth() {
     updateIsPending,
   } = useAuthState();
 
-  const signin = async function (data: SignInUserType | { token: string }) {
+  const signin = async function (data?: SignInUserType) {
     try {
       updateIsPending(true);
 
-      const response = await api.post<
-        SignInUserType | { token: string },
-        AuthenticationDataType
-      >("/auth/sign-in", data);
+      const user = BrowserStorageUtils.getItem("user") as UserType | undefined;
+      let payload: any = {};
 
-      const message =
-        response?.data?.success?.message || "Sign in successfully";
+      if (user && !data) {
+        payload.username = user.username;
+        payload.token = CookieUtils.readCookie(CookieUtils.TOKEN_NAME + "tkn");
+      } else if (data) {
+        payload = data;
+      }
+
+      const responseData = await AuthAPI.signIn(payload);
+
+      if (!responseData) throw new Error("Sign up failed");
+
+      const message = responseData.success?.message || "Sign in successfully";
       toast.success(message, {
         position: "top-center",
         autoClose: 5000,
@@ -63,27 +56,22 @@ export function useAuth() {
 
       updateIsAuthenticated(true);
       updateIsPending(false);
-      if (response.data.data.token) {
-        updateUser(response?.data.data.user);
+      if (responseData.data.token) {
+        updateUser(responseData.data.user);
 
         // Add token to cookie
         CookieUtils.writePersistentCookie(
           CookieUtils.TOKEN_NAME + "tkn",
-          response.data.data.token
+          responseData.data.token
         );
       }
 
-      if (response.data.data.user) {
+      if (responseData.data.user) {
         // Save to local storage
-        BrowserStorageUtils.setItem("user", response?.data.data.user);
-      } else {
-        // Get user from local storage
-        const user = BrowserStorageUtils.getItem("user") as UserType;
-        user.id = Number(user.id);
-        updateUser(user);
+        BrowserStorageUtils.setItem("user", responseData?.data.user);
       }
 
-      return response?.data;
+      return responseData.data;
     } catch (error: any) {
       updateIsPending(false);
       navigate("/");
@@ -93,13 +81,12 @@ export function useAuth() {
     try {
       updateIsPending(true);
 
-      const response = await api.post<SignUpUserType, AuthenticationDataType>(
-        "/auth/sign-up",
-        data
-      );
+      const responseData = await AuthAPI.signUp(data);
 
-      const message =
-        response?.data?.success?.message || "Sign up successfully";
+      if (!responseData) throw new Error("Sign up failed");
+
+      const message = responseData.success?.message || "Sign up successfully";
+
       toast.success(message, {
         position: "top-center",
         autoClose: 5000,
@@ -107,18 +94,18 @@ export function useAuth() {
 
       updateIsAuthenticated(true);
       updateIsPending(false);
-      updateUser(response?.data.data.user);
+      updateUser(responseData.data.user);
 
       // Add token to cookie
       CookieUtils.writePersistentCookie(
         CookieUtils.TOKEN_NAME + "tkn",
-        response.data.data.token
+        responseData.data.token
       );
 
       // Save to local storage
-      BrowserStorageUtils.setItem("user", response?.data.data.user);
+      BrowserStorageUtils.setItem("user", responseData?.data.user);
 
-      return response?.data;
+      return responseData;
     } catch (error: any) {
       updateIsPending(false);
       navigate("/");

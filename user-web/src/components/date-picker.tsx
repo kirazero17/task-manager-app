@@ -1,6 +1,7 @@
 import { PencilLine } from "lucide-react";
 
 // Import components
+import { Button } from "src/components/ui/button";
 import { Calendar } from "src/components/ui/calendar";
 import {
   PopoverDialog,
@@ -77,11 +78,15 @@ export function DatePickerForm({
       render={({ field }) => (
         <FormItem>
           <PopoverDialog>
-            <FormControl>
-              <PopoverDialogTrigger asChild>
-                {TriggerContent && <TriggerContent fieldValue={field.value} />}
-              </PopoverDialogTrigger>
-            </FormControl>
+            <PopoverDialogTrigger asChild>
+              <FormControl>
+                <Button variant="ghost">
+                  {TriggerContent && (
+                    <TriggerContent fieldValue={field.value} />
+                  )}
+                </Button>
+              </FormControl>
+            </PopoverDialogTrigger>
             <PopoverDialogContent className="w-auto p-0" align="start">
               <Calendar
                 initialFocus

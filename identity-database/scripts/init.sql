@@ -27,8 +27,13 @@ CREATE TABLE IF NOT EXISTS `User` (
 );
 
 -- INSERT SOME DEFAULT VALUE
+SET @userRoleId = UUID();
+SET @userId = '94859814-c1d3-11ef-bdb5-0242ac160003';
 INSERT INTO `Role` (`id`, `name`, `value`, `createdAt`, `updatedAt`)
 VALUES
-    (UUID(), "User", "user", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (@userRoleId, "User", "user", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     (UUID(), "Admin", "admin", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO `User` (`id`, `roleId`, `firstName`, `lastName`, `username`, `email`, `hashedPassword`, `isVerified`, `createdAt`, `updatedAt`)
+VALUES
+    (@userId, @userRoleId, "ABC", "Nguyen", "user01", "user01@gmail.com", "$2b$05$8VpZIY4uyOzNypiSYHdV9eW3NcGeGpKU8iprdo7TNwH1V20YKugYW", 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

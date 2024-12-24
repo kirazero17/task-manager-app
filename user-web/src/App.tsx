@@ -15,7 +15,7 @@ function App() {
 
   React.useEffect(() => {
     // Fetch some values
-    if (import.meta.env.MODE === "dev") {
+    if (import.meta.env.VITE_MODE === "dev") {
       // In development
       // Fetch data from mock data
       import("src/mock-data/statuses.json").then((result) => {
@@ -33,7 +33,7 @@ function App() {
       import("src/mock-data/tasks.json").then((result) => {
         setTasks(result.default);
       });
-    } else if (import.meta.env.MODE === "prod") {
+    } else if (import.meta.env.VITE_MODE === "prod") {
       // In production
       // Fetch data from server
       Promise.all([

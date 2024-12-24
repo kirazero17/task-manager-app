@@ -12,7 +12,8 @@
           "tableName": "User",
           "associations": [
             {
-              "name": "Role",
+              "object": "Role",
+              "name": "role",
               "type": "belong",
               "foreignKey": "roleId"
             }
@@ -22,7 +23,8 @@
           "tableName": "Role",
           "associations": [
             {
-              "name": "User",
+              "object": "User",
+              "name": "user",
               "type": "has_many",
               "foreignKey": "roleId"
             }

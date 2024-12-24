@@ -54,12 +54,12 @@ class AuthService {
    * @returns
    */
   async verifyToken(token: string) {
-    return ErrorUtils.handleInterchangeError(this, async function (o) {
+    return ErrorUtils.handleInterchangeError(this, function (o) {
       if (!token) throw new Error("Token isn't found");
 
       // 1. Is token valid?
       if (!jwt.verify(token, this._signature)) {
-        o.code = 403;
+        o.code = 1;
         throw new Error("Token is invalid");
       }
 

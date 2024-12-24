@@ -92,8 +92,14 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "startAt",
     header: "Start date",
     cell: ({ row }) => {
+      const taskId = row.getValue("_id") as string;
       const startAt = row.getValue("startAt") as any;
       const [date, setDate] = React.useState(new Date(startAt));
+
+      React.useEffect(() => {
+        // Update task
+        UserAPI.updateTask(taskId, { startAt: date.getTime() });
+      }, [date]);
 
       return (
         <div className="flex items-center justify-between">
@@ -113,8 +119,14 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "endAt",
     header: "End date",
     cell: ({ row }) => {
+      const taskId = row.getValue("_id") as string;
       const endAt = row.getValue("endAt") as any;
       const [date, setDate] = React.useState(new Date(endAt));
+
+      React.useEffect(() => {
+        // Update task
+        UserAPI.updateTask(taskId, { endAt: date.getTime() });
+      }, [date]);
 
       return (
         <div className="flex items-center justify-between">

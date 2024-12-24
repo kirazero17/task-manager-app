@@ -4,13 +4,14 @@ import { Model } from "sequelize";
 import type { Sequelize, DataTypes } from "sequelize";
 
 type AssociationType = {
+  object: string;
   name: string;
   type: string;
   foreignKey: string;
   through?: string;
 };
 const associations: Array<AssociationType> = [
-  { name: "Role", type: "belong", foreignKey: "roleId" },
+  { object: "Role", name: "role", type: "belong", foreignKey: "roleId" },
 ];
 
 export default function (sequelize: Sequelize, dataTypes: typeof DataTypes) {
@@ -18,7 +19,7 @@ export default function (sequelize: Sequelize, dataTypes: typeof DataTypes) {
     // Define static functions
     static associate(models: any, objects: any) {
       for (const association of associations) {
-        const model = models[association.name];
+        const model = models[association.object];
 
         if (!model) throw new Error(`The ${association.name} doesn't exist`);
 

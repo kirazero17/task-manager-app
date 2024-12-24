@@ -2,6 +2,7 @@ import React from "react";
 import { Ellipsis, Plus } from "lucide-react";
 
 // Import objects
+import { UserAPI } from "src/objects/user/api";
 import { TaskUtils } from "src/objects/task/utils";
 
 // Import components
@@ -94,7 +95,7 @@ export default function BoardView() {
                     (newTask as any).status = newStatus;
 
                     // Update state: move task to order group
-                    updateTask(newTask as any);
+                    UserAPI.updateTask(newTask._id!, newTask as any);
 
                     // Un-highlight column
                     removeOutlineClassName(columnRefs.current, status.name);

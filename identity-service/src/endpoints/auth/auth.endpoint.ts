@@ -65,12 +65,13 @@ authEndpoints.createHandler("sign-up").post(async (req, res, o) => {
     await IdentityModels.User.create({
       ...data,
       id: uuid(),
+      roleId: role.id,
       hashedPassword,
     })
   ).toJSON();
 
   return {
-    user: { ...data, id: insertResult.id },
+    user: { ...data, id: insertResult.id, role },
     token: authService.createToken(role.name),
   };
 });
@@ -87,7 +88,17 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
   }
 
   // Find user with username
-  const findUserResult = await IdentityModels.User.findOne();
+  const findUserResult = await IdentityModels.User.findOne({
+    include: [
+      {
+        model: IdentityModels.Role,
+        as: "role",
+      },
+    ],
+    where: {
+      username: data.username,
+    },
+  });
 
   if (!findUserResult) {
     o.code = 400;
@@ -97,14 +108,27 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
   const user = findUserResult.toJSON();
 
   // Check password
-  if (!bcrypt.compareSync(data.password, user.hashedPassword)) {
+  if (
+    data.password &&
+    !bcrypt.compareSync(data.password, user.hashedPassword)
+  ) {
     o.code = 400;
     throw new Error("Incorrect password");
+  } else if (
+    data.token &&
+    (await authService.verifyToken(data.token)).code === 1
+  ) {
+    o.code = 401;
+    throw new Error("Invalid token");
   }
 
+  // Delete some fields
+  delete user.hashedPassword;
+  delete user.roleId;
+
   return {
-    user: { ...data, id: user.id },
-    token: authService.createToken("User"),
+    user: user,
+    token: authService.createToken(user.role.name),
   };
 });
 

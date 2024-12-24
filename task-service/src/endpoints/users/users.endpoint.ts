@@ -117,7 +117,7 @@ usersEndpoints
  * Note: can be used by authorized person only.
  */
 usersEndpoints
-  .createHandler("task")
+  .createHandler("/:id/task")
   .use(AuthMiddlewares.checkToken)
   .use(AuthMiddlewares.createPolicyChecker("user:*", "user:addTask"))
   .post(async (req, res, o) => {
@@ -137,6 +137,7 @@ usersEndpoints
       );
     }
 
+    // Create task and assigment
     const result = await TaskManagerModels.Task.create(req.body);
 
     return result;
