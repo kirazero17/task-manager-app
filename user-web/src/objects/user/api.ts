@@ -62,6 +62,7 @@ export class UserAPI {
       );
       return response.data;
     } catch (error) {
+      console.error("UserAPI - Get tasks:", error);
       return;
     }
   }
@@ -84,6 +85,7 @@ export class UserAPI {
       );
       return response.data;
     } catch (error) {
+      console.error("UserAPI - Get task:", error);
       return;
     }
   }
@@ -107,6 +109,7 @@ export class UserAPI {
       );
       return response.data;
     } catch (error) {
+      console.error("UserAPI - Create task:", error);
       return;
     }
   }
@@ -130,6 +133,7 @@ export class UserAPI {
       });
       return response.data;
     } catch (error) {
+      console.error("UserAPI - Update task:", error);
       return;
     }
   }
@@ -152,6 +156,7 @@ export class UserAPI {
       );
       return response.data;
     } catch (error) {
+      console.error("UserAPI - Delete task:", error);
       return;
     }
   }

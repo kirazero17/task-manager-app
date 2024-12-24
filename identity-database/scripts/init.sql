@@ -31,3 +31,4 @@ INSERT INTO `Role` (`id`, `name`, `value`, `createdAt`, `updatedAt`)
 VALUES
     (UUID(), "User", "user", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     (UUID(), "Admin", "admin", CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+

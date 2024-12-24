@@ -109,8 +109,7 @@ export class API {
 
     return this._http.interceptors.response.use(
       onFulfilled as _KindOfOnFulfilled["response"],
-      onRejected,
-      options
+      onRejected
     );
   }
 

@@ -35,13 +35,13 @@ type TaskActions = {
   clearTasks(): void;
 
   // For status of task
-  setTaskStatuses(statuses: Array<TaskStatusType> | null): void;
+  setTaskStatuses(statuses?: Array<TaskStatusType> | null): void;
 
   // For priority of task
-  setTaskPriorities(statuses: Array<TaskPriorityType> | null): void;
+  setTaskPriorities(statuses?: Array<TaskPriorityType> | null): void;
 
   // For size of task
-  setTaskSizes(statuses: Array<TaskSizeType> | null): void;
+  setTaskSizes(statuses?: Array<TaskSizeType> | null): void;
 };
 
 /**
