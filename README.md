@@ -24,6 +24,9 @@ VITE_MODE="prod"
 ```
 
 - If you are going to deploy to your own PC, you must have Docker inside your machine.
+- You can test this application without create any account by using test account
+  - Username: `user01`.
+  - Password: `user01`.
 
 Ok, let's start.
 
