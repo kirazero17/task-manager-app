@@ -2,7 +2,11 @@
 
 A simple task manager application.
 
-## How does it should be used?
+<p align="center"><img src="https://github.com/user-attachments/assets/f0f173d0-94c3-44a2-832b-75288e92e408" /></p>
+
+<p align="center"><img src="https://github.com/user-attachments/assets/0f926a15-1a7c-4842-8eee-873d64ad486a" /></p>
+
+## Why do I build it?
 
 I build this project is suitable for:
 
@@ -11,7 +15,7 @@ I build this project is suitable for:
 
 ## Tech stack
 
-**INSERT IMAGE HERE**
+<p align="center"><img src="https://github.com/user-attachments/assets/b5b67573-f9da-4e42-9c2e-e935d540dc62" /></p>
 
 ## How to deploy?
 
