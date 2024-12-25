@@ -9,6 +9,7 @@ export type TaskModelType = {
   sizeId: string;
   name: string;
   description: string;
+  assignees: Array<string>;
   startAt: number;
   endAt: number;
   createdAt: number;

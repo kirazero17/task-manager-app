@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-let _schema: any;
+let _schema: Schema;
 
 export default function () {
   if (!_schema)

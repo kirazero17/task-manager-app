@@ -181,9 +181,10 @@ instance.TaskPriority.insertMany([
 let userId = "94859814-c1d3-11ef-bdb5-0242ac160003";
 
 // Create tasks
-instance.Task.insertMany([
+let tasks = [
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a2b"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a32"),
     statusId: ObjectId("676b6bcac92f87588e567a2c"),
     sizeId: ObjectId("676b708c6a2c77e209567a2e"),
@@ -195,7 +196,8 @@ instance.Task.insertMany([
     updatedAt: 1734410000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a2c"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a34"),
     statusId: ObjectId("676b6bcac92f87588e567a2f"),
     sizeId: ObjectId("676b708c6a2c77e209567a2d"),
@@ -207,7 +209,8 @@ instance.Task.insertMany([
     updatedAt: 1734390000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a2d"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a34"),
     statusId: ObjectId("676b6bcac92f87588e567a2b"),
     sizeId: ObjectId("676b708c6a2c77e209567a30"),
@@ -219,7 +222,8 @@ instance.Task.insertMany([
     updatedAt: 1734400000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a2e"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a33"),
     statusId: ObjectId("676b6bcac92f87588e567a2e"),
     sizeId: ObjectId("676b708c6a2c77e209567a2f"),
@@ -231,7 +235,8 @@ instance.Task.insertMany([
     updatedAt: 1734310000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a2f"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a36"),
     statusId: ObjectId("676b6bcac92f87588e567a2c"),
     sizeId: ObjectId("676b708c6a2c77e209567a2b"),
@@ -243,7 +248,8 @@ instance.Task.insertMany([
     updatedAt: 1734450000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a30"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a35"),
     statusId: ObjectId("676b6bcac92f87588e567a2d"),
     sizeId: ObjectId("676b708c6a2c77e209567a31"),
@@ -255,7 +261,8 @@ instance.Task.insertMany([
     updatedAt: 1734460000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a31"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a34"),
     statusId: ObjectId("676b6bcac92f87588e567a2f"),
     sizeId: ObjectId("676b708c6a2c77e209567a2d"),
@@ -267,7 +274,8 @@ instance.Task.insertMany([
     updatedAt: 1734470000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a32"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a33"),
     statusId: ObjectId("676b6bcac92f87588e567a2e"),
     sizeId: ObjectId("676b708c6a2c77e209567a30"),
@@ -279,7 +287,8 @@ instance.Task.insertMany([
     updatedAt: 1734500000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a33"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a32"),
     statusId: ObjectId("676b6bcac92f87588e567a2b"),
     sizeId: ObjectId("676b708c6a2c77e209567a2e"),
@@ -291,7 +300,8 @@ instance.Task.insertMany([
     updatedAt: 1734430000000,
   },
   {
-    creatorId: userId,
+    _id: ObjectId("676bb1141510a2551f567a34"),
+    creatorId: "94859814-c1d3-11ef-bdb5-0242ac160003",
     priorityId: ObjectId("676b708c6a2c77e209567a32"),
     statusId: ObjectId("676b6bcac92f87588e567a2c"),
     sizeId: ObjectId("676b708c6a2c77e209567a31"),
@@ -302,6 +312,17 @@ instance.Task.insertMany([
     createdAt: 1734402915812,
     updatedAt: 1734440000000,
   },
-]);
+];
+instance.Task.insertMany(tasks);
 
 // Create assignments
+let assignments = tasks.map((task) => {
+  return {
+    taskId: task._id,
+    assignees: [userId],
+    createdAt: 1735095120921,
+    updatedAt: 1735095120921,
+  };
+});
+
+instance.Assignment.insertMany(assignments);

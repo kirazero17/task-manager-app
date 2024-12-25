@@ -1,6 +1,6 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { PencilLine } from "lucide-react";
+import { PencilLine, Check } from "lucide-react";
 
 // Import components
 import { DatePicker } from "src/components/date-picker";
@@ -19,6 +19,9 @@ import { Input } from "src/components/ui/input";
 // Import objects
 import { UserAPI } from "src/objects/user/api";
 
+// Import states
+import { useTaskState } from "src/states/task";
+
 // Import types
 import type { TaskType } from "src/objects/task/types";
 
@@ -31,13 +34,18 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const [canEdit, setCanEdit] = React.useState(false);
+      const taskId = row.getValue("_id") as string;
       const name = row.getValue("name") as any;
+
+      const inputRef = React.useRef<HTMLInputElement | null>(null);
 
       return (
         <div className="flex items-center gap-2 justify-between">
           {canEdit ? (
             <Input
+              ref={inputRef}
               autoFocus
               className="w-full shadow-none bg-white h-fit p-0"
               type="text"
@@ -46,12 +54,34 @@ export const taskColumns: ColumnDef<TaskType>[] = [
           ) : (
             <p>{name}</p>
           )}
-          <PencilLine
-            onClick={() => setCanEdit((state) => !state)}
-            className="cursor-pointer"
-            color="gray"
-            size="16px"
-          />
+          <div className="flex items-center">
+            {canEdit && (
+              <Check
+                onClick={() => {
+                  if (inputRef.current) {
+                    // Update task
+                    UserAPI.updateTask(taskId, {
+                      name: inputRef.current.value,
+                    }).then((response) => {
+                      // Update task state
+                      updateTask(response!.data);
+
+                      setCanEdit(false);
+                    });
+                  }
+                }}
+                className="cursor-pointer me-2"
+                color="gray"
+                size="16px"
+              />
+            )}
+            <PencilLine
+              onClick={() => setCanEdit((state) => !state)}
+              className="cursor-pointer"
+              color="gray"
+              size="16px"
+            />
+          </div>
         </div>
       );
     },
@@ -60,17 +90,19 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const [canEdit, setCanEdit] = React.useState(false);
+      const taskId = row.getValue("_id") as string;
       const description = row.getValue("description") as any;
+
+      const inputRef = React.useRef<HTMLInputElement | null>(null);
 
       return (
         <div className="flex items-center gap-2 justify-between">
           {canEdit ? (
             <Input
+              ref={inputRef}
               autoFocus
-              onSubmit={() => {
-                alert("HEHE");
-              }}
               className="w-full shadow-none bg-white h-fit p-0"
               type="text"
               defaultValue={description}
@@ -78,12 +110,34 @@ export const taskColumns: ColumnDef<TaskType>[] = [
           ) : (
             <p>{description}</p>
           )}
-          <PencilLine
-            onClick={() => setCanEdit((state) => !state)}
-            className="cursor-pointer"
-            color="gray"
-            size="16px"
-          />
+          <div className="flex items-center">
+            {canEdit && (
+              <Check
+                onClick={() => {
+                  if (inputRef.current) {
+                    // Update task
+                    UserAPI.updateTask(taskId, {
+                      name: inputRef.current.value,
+                    }).then((response) => {
+                      // Update task state
+                      updateTask(response!.data);
+
+                      setCanEdit(false);
+                    });
+                  }
+                }}
+                className="cursor-pointer me-2"
+                color="gray"
+                size="16px"
+              />
+            )}
+            <PencilLine
+              onClick={() => setCanEdit((state) => !state)}
+              className="cursor-pointer"
+              color="gray"
+              size="16px"
+            />
+          </div>
         </div>
       );
     },
@@ -92,13 +146,19 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "startAt",
     header: "Start date",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const startAt = row.getValue("startAt") as any;
       const [date, setDate] = React.useState(new Date(startAt));
 
       React.useEffect(() => {
         // Update task
-        UserAPI.updateTask(taskId, { startAt: date.getTime() });
+        UserAPI.updateTask(taskId, { startAt: date.getTime() }).then(
+          (response) => {
+            // Update task state
+            updateTask(response!.data);
+          }
+        );
       }, [date]);
 
       return (
@@ -119,13 +179,19 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "endAt",
     header: "End date",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const endAt = row.getValue("endAt") as any;
       const [date, setDate] = React.useState(new Date(endAt));
 
       React.useEffect(() => {
         // Update task
-        UserAPI.updateTask(taskId, { endAt: date.getTime() });
+        UserAPI.updateTask(taskId, { endAt: date.getTime() }).then(
+          (response) => {
+            // Update task state
+            updateTask(response!.data);
+          }
+        );
       }, [date]);
 
       return (
@@ -146,6 +212,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "priority",
     header: "Priority",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const priority = row.getValue("priority") as any;
 
@@ -155,9 +222,12 @@ export const taskColumns: ColumnDef<TaskType>[] = [
           <TaskPriorityDropdownMenu
             onSelect={(value) => {
               // Request to update task
-              UserAPI.updateTask(taskId, { priorityId: value });
-
-              // Update task in table
+              UserAPI.updateTask(taskId, { priorityId: value }).then(
+                (response) => {
+                  // Update task state
+                  updateTask(response!.data);
+                }
+              );
             }}
             defaultValue={priority._id}
           />
@@ -169,6 +239,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const status = row.getValue("status") as any;
 
@@ -178,9 +249,12 @@ export const taskColumns: ColumnDef<TaskType>[] = [
           <TaskStatusDropdownMenu
             onSelect={(value) => {
               // Request to update task
-              UserAPI.updateTask(taskId, { statusId: value });
-
-              // Update task in table
+              UserAPI.updateTask(taskId, { statusId: value }).then(
+                (response) => {
+                  // Update task state
+                  updateTask(response!.data);
+                }
+              );
             }}
             defaultValue={status._id}
           />
@@ -192,6 +266,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
     accessorKey: "size",
     header: "Size",
     cell: ({ row }) => {
+      const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const size = row.getValue("size") as any;
 
@@ -201,7 +276,10 @@ export const taskColumns: ColumnDef<TaskType>[] = [
           <TaskSizeDropdownMenu
             onSelect={(value) => {
               // Request to update task
-              UserAPI.updateTask(taskId, { sizeId: value });
+              UserAPI.updateTask(taskId, { sizeId: value }).then((response) => {
+                // Update task state
+                updateTask(response!.data);
+              });
 
               // Update task in table
             }}

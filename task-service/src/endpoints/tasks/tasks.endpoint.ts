@@ -82,8 +82,17 @@ tasksEndpoints
       throw new Error("The id of task is required");
     }
 
-    const query = TaskManagerModels.Task.findOne({ id: req.params.id });
-    const result = await query.exec();
+    const { limit, skip } = RequestUtils.getLimitNSkip(req);
+
+    const result = await TaskManagerModels.Task.find({
+      creatorId: req.params.id,
+    })
+      .populate("assignees")
+      .populate("priority", "_id name value order")
+      .populate("status", "_id name value order")
+      .populate("size", "_id name value order")
+      .skip(skip)
+      .limit(limit);
 
     return result;
   });

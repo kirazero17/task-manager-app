@@ -68,8 +68,8 @@ usersEndpoints
  */
 usersEndpoints
   .createHandler(":id/tasks")
-  .use(AuthMiddlewares.checkToken)
-  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTasks"))
+  // .use(AuthMiddlewares.checkToken)
+  // .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTasks"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -81,6 +81,10 @@ usersEndpoints
     const result = await TaskManagerModels.Task.find({
       creatorId: req.params.id,
     })
+      .populate("assignees")
+      .populate("priority", "_id name value order")
+      .populate("status", "_id name value order")
+      .populate("size", "_id name value order")
       .skip(skip)
       .limit(limit);
 

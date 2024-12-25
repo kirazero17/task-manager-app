@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-let _schema: any;
+let _schema: Schema;
 
 export default function () {
-  if (!_schema)
+  if (!_schema) {
     _schema = new Schema(
       {
         creatorId: Schema.Types.String,
@@ -23,8 +23,57 @@ export default function () {
           default: Date.now(),
         },
       },
-      { collection: "Task" }
+      {
+        collection: "Task",
+        toJSON: {
+          virtuals: true,
+          transform: function (doc, ret) {
+            // Detele some fields
+            delete ret.priorityId;
+            delete ret.statusId;
+            delete ret.sizeId;
+            delete ret.id;
+
+            // Change some fields
+            ret.assignees = ret.assignees.assignees;
+
+            return ret;
+          },
+        },
+      }
     );
+
+    _schema.virtual("assignees", {
+      ref: "Assignment",
+      localField: "_id",
+      foreignField: "taskId",
+      justOne: true,
+    });
+    _schema.virtual("priority", {
+      ref: "TaskPriority",
+      localField: "priorityId",
+      foreignField: "_id",
+      justOne: true,
+    });
+    _schema.virtual("priority", {
+      ref: "TaskPriority",
+      localField: "priorityId",
+      foreignField: "_id",
+      justOne: true,
+    });
+    _schema.virtual("status", {
+      ref: "TaskStatus",
+      localField: "statusId",
+      foreignField: "_id",
+      justOne: true,
+    });
+    _schema.virtual("size", {
+      ref: "TaskSize",
+      localField: "sizeId",
+      foreignField: "_id",
+      justOne: true,
+    });
+  }
   const TaskModel = mongoose.model("Task", _schema);
   return { model: TaskModel, name: "Task" };
 }
