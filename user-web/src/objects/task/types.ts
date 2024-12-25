@@ -9,7 +9,6 @@ export type TaskModelType = {
   sizeId: string;
   name: string;
   description: string;
-  progress: number;
   startAt: number;
   endAt: number;
   createdAt: number;

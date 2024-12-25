@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `User` (
 
 -- INSERT SOME DEFAULT VALUE
 SET @userRoleId = UUID();
+-- NOTE: you can use this id in other database initialization scripts
 SET @userId = '94859814-c1d3-11ef-bdb5-0242ac160003';
 INSERT INTO `Role` (`id`, `name`, `value`, `createdAt`, `updatedAt`)
 VALUES

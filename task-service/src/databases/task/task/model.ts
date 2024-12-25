@@ -12,7 +12,6 @@ export default function () {
         sizeId: Schema.Types.ObjectId,
         name: Schema.Types.String,
         description: Schema.Types.String,
-        progress: Schema.Types.Number,
         startAt: Schema.Types.Number,
         endAt: Schema.Types.Number,
         createdAt: {

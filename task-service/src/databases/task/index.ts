@@ -35,7 +35,7 @@ const databaseEngine = database.engine
 
 export type TaskManagerModelsType = {
   Task: Model<any>;
-  Assigment: Model<any>;
+  Assignment: Model<any>;
   TaskStatus: Model<any>;
   TaskPriority: Model<any>;
   TaskSize: Model<any>;

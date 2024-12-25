@@ -7,6 +7,8 @@ import task from "src/databases/task";
 
 // Import services
 import { AuthMiddlewares } from "src/services/auth/middlewares";
+import { TaskValidator } from "src/services/validators/task";
+import { AssignmentValidator } from "src/services/validators/assignment";
 
 // Import utils
 import { RequestUtils } from "src/utils/request";
@@ -127,20 +129,41 @@ usersEndpoints
     }
 
     // Validate task data
-    const validationResult = (await TaskManagerModels.Task.validate(
-      req.body
-    )) as any;
+    const taskValidationResult = TaskValidator.validate(req.body);
 
-    if (!validationResult.errors) {
+    if (!taskValidationResult.error) {
       throw new Error(
-        `Endpoint - User creates task: ${validationResult.errors}`
+        `Endpoint - User creates task: ${taskValidationResult.error}`
       );
     }
 
-    // Create task and assigment
-    const result = await TaskManagerModels.Task.create(req.body);
+    // Validate assignment data
+    const assignees = [req.params.id];
 
-    return result;
+    if (taskValidationResult.value.assignees) {
+      assignees.concat(taskValidationResult.value.assignees);
+    }
+
+    // Validate task data
+    const assignmentValidationResult = AssignmentValidator.validate({
+      taskId: taskValidationResult.value.id,
+      assignees: [req.params.id, ...taskValidationResult.value.assignees],
+    });
+
+    if (!assignmentValidationResult.error) {
+      throw new Error(
+        `Endpoint - User creates assigment: ${assignmentValidationResult.error}`
+      );
+    }
+
+    // Safe to create new task
+    // Create task and assigment
+    const createTaskResult = await TaskManagerModels.Task.create(
+      taskValidationResult.value
+    );
+    await TaskManagerModels.Assignment.create(assignmentValidationResult.value);
+
+    return createTaskResult;
   });
 
 /**
@@ -163,13 +186,11 @@ usersEndpoints
     }
 
     // Validate task data
-    const validationResult = (await TaskManagerModels.Task.validate(
-      req.body
-    )) as any;
+    const validationResult = AssignmentValidator.validate(req.body);
 
-    if (!validationResult.errors) {
+    if (!validationResult.error) {
       throw new Error(
-        `Endpoint - User creates task: ${validationResult.errors}`
+        `Endpoint - User updates task: ${validationResult.error}`
       );
     }
 
