@@ -280,8 +280,6 @@ export const taskColumns: ColumnDef<TaskType>[] = [
                 // Update task state
                 updateTask(response!.data);
               });
-
-              // Update task in table
             }}
             defaultValue={size._id}
           />
