@@ -226,7 +226,7 @@ export default function TaskFormDialog({
                   <span className="ms-3">Adding...</span>
                 </div>
               ) : (
-                "Create"
+                "Submit"
               )}
             </Button>
           </form>

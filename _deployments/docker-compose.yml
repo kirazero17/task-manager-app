@@ -15,7 +15,7 @@ services:
       dockerfile: dockerfile
       context: ../identity-database
     healthcheck:
-      test: ["CMD-SHELL", "mysql", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 8s
       retries: 8
       start_period: 10s

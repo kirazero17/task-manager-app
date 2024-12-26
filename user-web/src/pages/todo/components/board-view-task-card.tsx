@@ -74,9 +74,9 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
           TriggerContent={
             <header
               onClick={() => setCurrentTask(props.data)}
-              className="cursor-pointer hover:underline"
+              className="text-left cursor-pointer hover:underline"
             >
-              <h3 className="text-left font-bold ">{props.data.name}</h3>
+              <h3 className="font-bold ">{props.data.name}</h3>
               <p className="text-ellipsis overflow-hidden">
                 {props.data.description}
               </p>

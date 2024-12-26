@@ -106,14 +106,6 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
   }
 
   const user = findUserResult.toJSON();
-  let passwordCheck = bcrypt.compareSync(data.password, user.hashedPassword);
-
-  // Check password
-  if (data.password && !passwordCheck) {
-    o.code = 400;
-    throw new Error("Incorrect password");
-  }
-
   let tokenCheck = (await authService.verifyToken(data.token)).code === 0;
 
   if (data.token && !tokenCheck) {
@@ -124,6 +116,18 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
     return {
       user: user,
     };
+  }
+
+  if (!data.password) {
+    o.code = 400;
+    throw new Error("Password is required");
+  }
+
+  let passwordCheck = bcrypt.compareSync(data.password, user.hashedPassword);
+  // Check password
+  if (data.password && !passwordCheck) {
+    o.code = 400;
+    throw new Error("Incorrect password");
   }
 
   // Delete some fields
