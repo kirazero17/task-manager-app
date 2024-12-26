@@ -106,20 +106,20 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
   }
 
   const user = findUserResult.toJSON();
+  let passwordCheck = bcrypt.compareSync(data.password, user.hashedPassword);
 
   // Check password
-  if (
-    data.password &&
-    !bcrypt.compareSync(data.password, user.hashedPassword)
-  ) {
+  if (data.password && !passwordCheck) {
     o.code = 400;
     throw new Error("Incorrect password");
   }
 
-  if (data.token && (await authService.verifyToken(data.token)).code === 1) {
+  let tokenCheck = (await authService.verifyToken(data.token)).code === 0;
+
+  if (data.token && !tokenCheck) {
     o.code = 401;
     throw new Error("Invalid token");
-  } else {
+  } else if (data.token && tokenCheck) {
     // Token is valid
     return {
       user: user,
