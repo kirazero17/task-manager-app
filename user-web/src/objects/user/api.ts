@@ -7,6 +7,16 @@ import { BrowserStorageUtils } from "src/utils/browser_storage";
 import type { UserType } from "./types";
 import type { TaskType, TaskModelType } from "../task/types";
 
+type UpdateTaskType = {
+  task: Partial<TaskModelType>;
+  assignees?: Array<string>;
+};
+
+type CreateTaskType = {
+  task: TaskModelType;
+  assignees?: Array<string>;
+};
+
 const taskManagerAPI = new API({
   baseURL: import.meta.env.VITE_TASK_SERVICE_ENDPOINT,
 });
@@ -46,7 +56,7 @@ export class UserAPI {
    */
   static async getTasks(params?: Record<string, any>) {
     if (!params) params = {};
-    if (!params.limit) params.limit = 10;
+    if (!params.limit) params.limit = 10000;
     if (!params.skip) params.skip = 0;
 
     try {
@@ -98,9 +108,9 @@ export class UserAPI {
   static async createTask(task: TaskModelType) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await taskManagerAPI.post<TaskModelType, TaskType>(
+      const response = await taskManagerAPI.post<CreateTaskType, TaskType>(
         `/users/${user.id}/task`,
-        task,
+        { task },
         {
           headers: {
             Authorization: API.generateBearerToken(API.getToken()) as string,
@@ -123,14 +133,15 @@ export class UserAPI {
   static async updateTask(id: string, task: Partial<TaskModelType>) {
     try {
       const user = UserAPI.getLocalUser();
-      const response = await taskManagerAPI.patch<
-        Partial<TaskModelType>,
-        TaskType
-      >(`/users/${user.id}/tasks/${id}`, task, {
-        headers: {
-          Authorization: API.generateBearerToken(API.getToken()) as string,
-        },
-      });
+      const response = await taskManagerAPI.patch<UpdateTaskType, TaskType>(
+        `/users/${user.id}/tasks/${id}`,
+        { task },
+        {
+          headers: {
+            Authorization: API.generateBearerToken(API.getToken()) as string,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("UserAPI - Update task:", error);

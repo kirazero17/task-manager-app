@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const TaskValidator = Joi.object({
-  creatorId: Joi.string().required(),
+  creatorId: Joi.string().empty(""),
   priorityId: Joi.string().required(),
   statusId: Joi.string().required(),
   sizeId: Joi.string().required(),
@@ -14,7 +14,8 @@ export const TaskValidator = Joi.object({
 });
 
 export const UpdatedTaskValidator = Joi.object({
-  creatorId: Joi.string().required(),
+  _id: Joi.string().empty(""),
+  creatorId: Joi.string().empty(""),
   priorityId: Joi.string().empty(""),
   statusId: Joi.string().empty(""),
   sizeId: Joi.string().empty(""),

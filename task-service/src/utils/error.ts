@@ -35,36 +35,38 @@ export class ErrorUtils {
       let code = result.code === 200 ? 500 : result.code;
       result = HTTPUtils.generateHTTPResponseData(code, error.message);
     } finally {
-      if (result) return res.status(result.code).json(result);
+      return res.status(result.code).json(result);
     }
   }
 
   /**
    * Use this function to handle error in streamming response, if there
    * is any error, return JSON Response.
+   *
+   * Used in streamming / file response.
    * @param ctx
    * @param res
    * @param fn
    * @returns
    */
-  static async handleResponseError<C>(
+  static async handleError<C>(
     ctx: C,
     req: Request,
     res: Response,
     fn: (
       this: C,
       req: Request,
-      res: Response
-    ) => Promise<HTTPResponseDataType> | HTTPResponseDataType
+      res: Response,
+      result: HTTPResponseDataType
+    ) => any
   ) {
+    let result = HTTPUtils.generateHTTPResponseData(200, "Successfully");
+
     try {
-      await fn.call(ctx, req, res);
+      await fn.call(ctx, req, res, result);
     } catch (error: any) {
-      const result = HTTPUtils.generateHTTPResponseData(
-        404,
-        error.message,
-        null
-      );
+      let code = result.code === 200 ? 500 : result.code;
+      result = HTTPUtils.generateHTTPResponseData(code, error.message);
       return res.status(result.code).json(result);
     }
   }

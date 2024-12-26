@@ -16,30 +16,26 @@ export class AuthMiddlewares {
    * @returns
    */
   static checkToken(req: Request, res: Response, next: NextFunction) {
-    return ErrorUtils.handleJSONResponseError(
-      this,
-      req,
-      res,
-      async function ($, $$, o) {
-        const authorization = req.headers.authorization;
+    return ErrorUtils.handleError(this, req, res, async function ($, $$, o) {
+      const authorization = req.headers.authorization;
 
-        if (!authorization) {
-          o.code = 401;
-          throw new Error("Token is required");
-        }
-
-        const [, token] = authorization.split(" ");
-        const result = await authService.verifyToken(token);
-
-        if (result.code) {
-          res.locals.tokenPayload = result.data;
-          return next();
-        } else {
-          o.code = 401;
-          throw new Error("Unauthenticated");
-        }
+      if (!authorization) {
+        o.code = 401;
+        throw new Error("Token is required");
       }
-    );
+
+      const [, token] = authorization.split(" ");
+      const result = await authService.verifyToken(token);
+
+      if (!result.code) {
+        res.locals.tokenPayload = result.data;
+        // Go to next middleware
+        return next();
+      } else {
+        o.code = 401;
+        throw new Error(result.message ? result.message : "Token is invalid");
+      }
+    });
   }
 
   /**
@@ -56,26 +52,22 @@ export class AuthMiddlewares {
       res: Response,
       next: NextFunction
     ) {
-      return ErrorUtils.handleJSONResponseError(
-        that,
-        req,
-        res,
-        function ($, $$, o) {
-          const tokenPayload = res.locals.tokenPayload;
+      return ErrorUtils.handleError(that, req, res, function ($, $$, o) {
+        const tokenPayload = res.locals.tokenPayload;
 
-          if (!tokenPayload) {
-            o.code = 401;
-            throw new Error("Authentication is required");
-          }
-
-          if (authService.checkPolicy(tokenPayload.role, resource, action)) {
-            return next();
-          } else {
-            o.code = 403;
-            throw new Error("You don't have permission to do this action");
-          }
+        if (!tokenPayload) {
+          o.code = 401;
+          throw new Error("Authorization is required");
         }
-      );
+
+        if (authService.checkPolicy(tokenPayload.role, resource, action)) {
+          // Go to next middleware
+          return next();
+        } else {
+          o.code = 403;
+          throw new Error("You don't have permission to do this action");
+        }
+      });
     };
   }
 }

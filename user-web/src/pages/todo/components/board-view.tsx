@@ -1,5 +1,5 @@
 import React from "react";
-import { Ellipsis, Plus } from "lucide-react";
+import { Plus, Ellipsis } from "lucide-react";
 
 // Import objects
 import { UserAPI } from "src/objects/user/api";
@@ -9,13 +9,9 @@ import { TaskUtils } from "src/objects/task/utils";
 import TaskFormDialog from "./task-form-dialog";
 import BoardViewTaskCard from "./board-view-task-card";
 import { Button } from "src/components/ui/button";
-import { DialogTrigger } from "src/components/ui/dialog";
 
 // Import states
 import { useTaskState } from "src/states/task";
-
-// Import mockdata
-import TaskStatuses from "src/mock-data/statuses.json";
 
 function addOutlineClassName(elements: any, statusName: string) {
   let element = elements.get(statusName);
@@ -42,20 +38,14 @@ function removeOutlineClassName(elements: any, statusName: string) {
  * @returns
  */
 export default function BoardView() {
-  const {
-    tasks: globalTask,
-    tasksByStatus,
-    taskStatuses,
-    setCurrentTask,
-    updateTask,
-  } = useTaskState();
+  const { tasks, tasksByStatus, taskStatuses, setCurrentTask, updateTask } =
+    useTaskState();
   const columnRefs = React.useRef<Map<string, HTMLDivElement | null>>(
     new Map()
   );
 
   return (
     <div className="relative w-full flex flex-1 border p-2 bg-secondary rounded-lg overflow-x-auto">
-      <TaskFormDialog />
       <div className="flex flex-1">
         {tasksByStatus === null ? (
           <p>Loading...</p>
@@ -84,18 +74,12 @@ export default function BoardView() {
                   onDrop={(e) => {
                     const taskId = e.dataTransfer.getData("taskId");
 
-                    // Send a request to update task
-                    const newTask = {
-                      ...globalTask?.find((task) => task._id === taskId),
-                    };
-                    const newStatus = TaskStatuses.find(
-                      (s) => s.name === status.name
-                    );
-
-                    (newTask as any).status = newStatus;
-
                     // Update state: move task to order group
-                    UserAPI.updateTask(newTask._id!, newTask as any);
+                    UserAPI.updateTask(taskId, {
+                      statusId: status._id,
+                    }).then((response) => {
+                      if (response?.data) updateTask(response?.data);
+                    });
 
                     // Un-highlight column
                     removeOutlineClassName(columnRefs.current, status.name);
@@ -135,15 +119,17 @@ export default function BoardView() {
                       })
                     )}
                   </div>
-                  <DialogTrigger className="w-full px-3">
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      onClick={() => setCurrentTask(null)}
-                    >
-                      <Plus /> Add new item
-                    </Button>
-                  </DialogTrigger>
+                  <TaskFormDialog
+                    TriggerContent={
+                      <Button
+                        className="w-full"
+                        variant="outline"
+                        onClick={() => setCurrentTask(null)}
+                      >
+                        <Plus /> Add new item
+                      </Button>
+                    }
+                  />
                 </div>
               );
             })

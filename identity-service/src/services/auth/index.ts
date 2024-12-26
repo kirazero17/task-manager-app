@@ -48,20 +48,13 @@ class AuthService {
     }
   }
 
-  /**
-   * Use this method to verify token
-   * @param tokenInHeaders
-   * @returns
-   */
   async verifyToken(token: string) {
-    return ErrorUtils.handleInterchangeError(this, function (o) {
+    return ErrorUtils.handleInterchangeError(this, async function (o) {
       if (!token) throw new Error("Token isn't found");
 
       // 1. Is token valid?
-      if (!jwt.verify(token, this._signature)) {
-        o.code = 1;
+      if (!jwt.verify(token, this._signature))
         throw new Error("Token is invalid");
-      }
 
       let tokenPayload = jwt.decode(token) as AccessTokenPayloadType;
       let expire = tokenPayload.expire;
@@ -72,14 +65,11 @@ class AuthService {
         throw new Error("The token provider isn't valid");
 
       // 3. Check expiration
-      if (expire <= now) {
-        throw new Error("The token is expired");
-      }
+      if (expire <= now) throw new Error("The token is expired");
 
-      o.data = tokenPayload;
       o.message = "Token is valid";
 
-      return;
+      return tokenPayload;
     });
   }
 
@@ -97,10 +87,10 @@ class AuthService {
       return null;
     }
 
-    let period = DatetimeUtils.getTime(
+    let periodAsJWTFormat =
       AuthSettings.EXPIRATION.ACCESS_TOKEN.value +
-        AuthSettings.EXPIRATION.ACCESS_TOKEN.postfix
-    );
+      AuthSettings.EXPIRATION.ACCESS_TOKEN.postfix;
+    let period = DatetimeUtils.getTime(periodAsJWTFormat);
 
     if (!this._role[role]) throw new Error("Invalid role");
 
@@ -112,7 +102,7 @@ class AuthService {
 
     let token = jwt.sign(tokenPayload, this._signature, {
       algorithm: "HS256",
-      expiresIn: period,
+      expiresIn: periodAsJWTFormat,
     });
 
     return token;

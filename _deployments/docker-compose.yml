@@ -7,12 +7,6 @@ services:
     build:
       dockerfile: dockerfile
       context: ../task-database
-    # healthcheck:
-    #   test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-    #   interval: 8s
-    #   retries: 8
-    #   start_period: 10s
-    #   timeout: 15s
   identity.database:
     env_file: "../_docker-compose-env/identity-database.env"
     ports:
@@ -47,6 +41,9 @@ services:
     ports:
       - "3000:3000"
   userweb:
+    depends_on:
+      - task.service
+      - identity.service
     build:
       dockerfile: dockerfile
       context: ../user-web

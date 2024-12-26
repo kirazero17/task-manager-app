@@ -28,7 +28,7 @@ type TaskActions = {
   addTasks(tasks: Array<TaskType> | null): void;
   addTask(task: TaskType): void;
   addTaskToGroup(groupName: string, task: TaskType | string): void;
-  updateTask(task: TaskType | string): void;
+  updateTask(task: TaskType): void;
   deleteTaskFromGroup(task: TaskType | string): void;
   deteteTask(task: TaskType): void;
   updateIsResponding(status?: boolean): void;
@@ -296,10 +296,7 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         const oldTaskIndex = state.tasks.findIndex((t) => t._id === task._id);
 
         // If new task in another group, change this new task group
-        if (
-          task.status._id !== state.tasks[oldTaskIndex].status._id &&
-          state.tasksByStatus
-        ) {
+        if (state.tasksByStatus) {
           // Delete from old group
           deleteTaskFromGroup(
             state.tasks[oldTaskIndex].status.value,

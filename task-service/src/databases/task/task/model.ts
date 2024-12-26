@@ -35,7 +35,8 @@ export default function () {
             delete ret.id;
 
             // Change some fields
-            ret.assignees = ret.assignees.assignees;
+            if (ret.assignees && ret.assignees.assignees)
+              ret.assignees = ret.assignees.assignees;
 
             return ret;
           },
@@ -47,12 +48,6 @@ export default function () {
       ref: "Assignment",
       localField: "_id",
       foreignField: "taskId",
-      justOne: true,
-    });
-    _schema.virtual("priority", {
-      ref: "TaskPriority",
-      localField: "priorityId",
-      foreignField: "_id",
       justOne: true,
     });
     _schema.virtual("priority", {

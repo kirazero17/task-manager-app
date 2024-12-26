@@ -2,19 +2,20 @@ import React from "react";
 import { Ellipsis, Trash2 } from "lucide-react";
 
 // Import components
+import TaskFormDialog from "./task-form-dialog";
 import { TaskSizeBadge, TaskPriorityBadge } from "./task-attribute-badges";
-import { DialogTrigger } from "src/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "src/components/ui/dropdown-menu";
 
 // Import hooks
 import { useTaskState } from "src/states/task";
+
+// Import objects
+import { UserAPI } from "src/objects/user/api";
 
 // Import types
 import type { TaskType } from "src/objects/task/types";
@@ -43,7 +44,7 @@ function removeOutlineClassName(element: any) {
 }
 
 export default function BoardViewTaskCard(props: TaskCardProps) {
-  const { setCurrentTask } = useTaskState();
+  const { setCurrentTask, deteteTask } = useTaskState();
   const draggableCardRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleDragStart = (e: React.DragEvent) => {
@@ -69,14 +70,20 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
       className="relative flex cursor-grab bg-white shadow w-full justify-between px-3 py-2 rounded-lg border mb-3"
     >
       <section className="w-4/5">
-        <DialogTrigger onClick={() => setCurrentTask(props.data)}>
-          <header className="cursor-pointer text-left hover:underline">
-            <h3 className="font-bold">{props.data.name}</h3>
-            <p className="text-ellipsis overflow-hidden">
-              {props.data.description}
-            </p>
-          </header>
-        </DialogTrigger>
+        <TaskFormDialog
+          TriggerContent={
+            <header
+              onClick={() => setCurrentTask(props.data)}
+              className="cursor-pointer hover:underline"
+            >
+              <h3 className="text-left font-bold ">{props.data.name}</h3>
+              <p className="text-ellipsis overflow-hidden">
+                {props.data.description}
+              </p>
+            </header>
+          }
+        />
+
         <div>
           <p className="text-xs">{TaskUtils.getStartEndDateStr(props.data)}</p>
         </div>
@@ -93,7 +100,14 @@ export default function BoardViewTaskCard(props: TaskCardProps) {
             <Ellipsis className="cursor-pointer hover:bg-secondary" />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem className="flex items-center cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => {
+                UserAPI.deleteTask(props.data._id).then(() => {
+                  deteteTask(props.data);
+                });
+              }}
+              className="flex items-center cursor-pointer"
+            >
               <Trash2 className="text-destructive" />
               <p className="text-destructive">Delete</p>
             </DropdownMenuItem>

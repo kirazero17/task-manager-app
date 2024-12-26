@@ -71,7 +71,7 @@ authEndpoints.createHandler("sign-up").post(async (req, res, o) => {
   ).toJSON();
 
   return {
-    user: { ...data, id: insertResult.id, role },
+    user: { ...validationResult.value, id: insertResult.id, role },
     token: authService.createToken(role.name),
   };
 });
@@ -114,12 +114,16 @@ authEndpoints.createHandler("sign-in").post(async (req, res, o) => {
   ) {
     o.code = 400;
     throw new Error("Incorrect password");
-  } else if (
-    data.token &&
-    (await authService.verifyToken(data.token)).code === 1
-  ) {
+  }
+
+  if (data.token && (await authService.verifyToken(data.token)).code === 1) {
     o.code = 401;
     throw new Error("Invalid token");
+  } else {
+    // Token is valid
+    return {
+      user: user,
+    };
   }
 
   // Delete some fields

@@ -10,8 +10,7 @@ import { TaskAPI } from "./objects/task/api";
 import { useTaskState } from "./states/task";
 
 function App() {
-  const { setTasks, setTaskPriorities, setTaskSizes, setTaskStatuses } =
-    useTaskState();
+  const { setTaskPriorities, setTaskSizes, setTaskStatuses } = useTaskState();
 
   React.useEffect(() => {
     // Fetch some values
@@ -28,10 +27,6 @@ function App() {
 
       import("src/mock-data/priorities.json").then((result) => {
         setTaskPriorities(result.default);
-      });
-
-      import("src/mock-data/tasks.json").then((result) => {
-        setTasks(result.default);
       });
     } else if (import.meta.env.VITE_MODE === "prod") {
       // In production

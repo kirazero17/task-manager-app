@@ -7,7 +7,10 @@ import task from "src/databases/task";
 
 // Import services
 import { AuthMiddlewares } from "src/services/auth/middlewares";
-import { TaskValidator } from "src/services/validators/task";
+import {
+  TaskValidator,
+  UpdatedTaskValidator,
+} from "src/services/validators/task";
 import { AssignmentValidator } from "src/services/validators/assignment";
 
 // Import utils
@@ -68,8 +71,8 @@ usersEndpoints
  */
 usersEndpoints
   .createHandler(":id/tasks")
-  // .use(AuthMiddlewares.checkToken)
-  // .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTasks"))
+  .use(AuthMiddlewares.checkToken)
+  .use(AuthMiddlewares.createPolicyChecker("user:*", "user:getTasks"))
   .get(async (req, res, o) => {
     if (!req.params.id) {
       o.code = 400;
@@ -110,10 +113,14 @@ usersEndpoints
       throw new Error("The id of task is required");
     }
 
-    const result = await TaskManagerModels.Task.find({
-      id: req.params.id,
+    const result = await TaskManagerModels.Task.findOne({
+      _id: req.params.taskId,
       creatorId: req.params.id,
-    });
+    })
+      .populate("assignees")
+      .populate("priority", "_id name value order")
+      .populate("status", "_id name value order")
+      .populate("size", "_id name value order");
 
     return result;
   });
@@ -132,26 +139,35 @@ usersEndpoints
       throw new Error("The id of user is required");
     }
 
-    // Validate task data
-    const taskValidationResult = TaskValidator.validate(req.body);
+    const { task, assignees } = req.body;
 
-    if (!taskValidationResult.error) {
+    // Validate task data
+    const taskValidationResult = TaskValidator.validate(task);
+
+    if (taskValidationResult.error) {
       throw new Error(
         `Endpoint - User creates task: ${taskValidationResult.error}`
       );
     }
 
     // Validate assignment data
-    const assignees = [req.params.id];
+    const _assignees = [req.params.id];
 
-    if (taskValidationResult.value.assignees) {
-      assignees.concat(taskValidationResult.value.assignees);
+    if (Array.isArray(assignees) && assignees.length > 0) {
+      _assignees.concat(assignees);
     }
 
-    // Validate task data
+    // Insert task
+    // Prepare data
+    taskValidationResult.value.creatorId = req.params.id;
+    const createTaskResult = await TaskManagerModels.Task.create(
+      taskValidationResult.value
+    );
+
+    // Validate assignment data
     const assignmentValidationResult = AssignmentValidator.validate({
-      taskId: taskValidationResult.value.id,
-      assignees: [req.params.id, ...taskValidationResult.value.assignees],
+      taskId: createTaskResult._id,
+      assignees: _assignees,
     });
 
     if (!assignmentValidationResult.error) {
@@ -162,12 +178,17 @@ usersEndpoints
 
     // Safe to create new task
     // Create task and assigment
-    const createTaskResult = await TaskManagerModels.Task.create(
-      taskValidationResult.value
-    );
     await TaskManagerModels.Assignment.create(assignmentValidationResult.value);
 
-    return createTaskResult;
+    // Query task with populated data
+    return await TaskManagerModels.Task.findOne({
+      _id: createTaskResult._id,
+      creatorId: req.params.id,
+    })
+      .populate("assignees")
+      .populate("priority", "_id name value order")
+      .populate("status", "_id name value order")
+      .populate("size", "_id name value order");
   });
 
 /**
@@ -189,22 +210,51 @@ usersEndpoints
       throw new Error("The id of task is required");
     }
 
-    // Validate task data
-    const validationResult = AssignmentValidator.validate(req.body);
+    const { task, assignees } = req.body;
 
-    if (!validationResult.error) {
+    if (!task) {
+      o.code = 400;
+      throw new Error("Task data is required");
+    }
+
+    // Validate task data
+    const taskValidationResult = UpdatedTaskValidator.validate(task);
+
+    if (taskValidationResult.error) {
       throw new Error(
-        `Endpoint - User updates task: ${validationResult.error}`
+        `Endpoint - User updates task: ${taskValidationResult.error}`
       );
     }
 
-    const updateOperation = TaskManagerModels.Task.updateOne(
-      { id: req.params.taskId, creatorId: req.params.id },
-      req.body
-    );
-    const result = await updateOperation.exec();
+    // If assignees is provided, validate it
+    if (assignees) {
+      // Update assignment
+      await TaskManagerModels.Assignment.updateOne(
+        {
+          taskId: req.params.taskId,
+        },
+        assignees
+      );
+    }
 
-    return result;
+    // Prepare data
+    taskValidationResult.value.creatorId = req.params.id;
+
+    const updateOperation = TaskManagerModels.Task.updateOne(
+      { _id: req.params.taskId, creatorId: req.params.id },
+      taskValidationResult.value
+    );
+    await updateOperation.exec();
+
+    // Query task with populated data
+    return await TaskManagerModels.Task.findOne({
+      _id: req.params.taskId,
+      creatorId: req.params.id,
+    })
+      .populate("assignees")
+      .populate("priority", "_id name value order")
+      .populate("status", "_id name value order")
+      .populate("size", "_id name value order");
   });
 
 /**
@@ -226,13 +276,21 @@ usersEndpoints
       throw new Error("The id of task is required");
     }
 
-    const delelteOperation = TaskManagerModels.Task.deleteOne({
-      id: req.params.taskId,
+    const taskDeleteOperation = TaskManagerModels.Task.deleteOne({
+      _id: req.params.taskId,
       creatorId: req.params.id,
     });
-    const result = await delelteOperation.exec();
+    const assignmentDeleteOperation = TaskManagerModels.Assignment.deleteOne({
+      taskId: req.params.taskId,
+    });
 
-    return result;
+    // Wait for task and assigment are deleted
+    const [taskDeleteResult] = await Promise.all([
+      taskDeleteOperation.exec(),
+      assignmentDeleteOperation.exec(),
+    ]);
+
+    return taskDeleteResult;
   });
 
 export default usersEndpoints;

@@ -1,3 +1,4 @@
+import React from "react";
 import { CircleAlert, Moon } from "lucide-react";
 
 // Import components
@@ -13,15 +14,35 @@ import {
 } from "src/components/ui/tabs";
 import { Input } from "src/components/ui/input";
 
+// Import objects
+import { UserAPI } from "src/objects/user/api";
+
 // Import states
 import { useTaskState } from "src/states/task";
 
 export default function TodoPage() {
-  const { tasks, tasksByStatus } = useTaskState();
+  const { tasks, tasksByStatus, setTasks } = useTaskState();
 
   const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
   let totalTask = tasks ? tasks.length : 0;
   let totalCompleteTask = completeTasks ? completeTasks.length : 0;
+
+  React.useEffect(() => {
+    // Fetch some values
+    if (import.meta.env.VITE_MODE === "dev") {
+      // In development
+      // Fetch data from mock data
+      import("src/mock-data/tasks.json").then((result) => {
+        setTasks(result.default);
+      });
+    } else if (import.meta.env.VITE_MODE === "prod") {
+      // In production
+      // Fetch data from server
+      UserAPI.getTasks().then((result) => {
+        setTasks(result?.data!);
+      });
+    }
+  }, []);
 
   return (
     <div className="w-full h-[calc(100dvh-28px)] flex flex-col px-2 py-3">

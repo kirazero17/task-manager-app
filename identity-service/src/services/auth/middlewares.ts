@@ -16,29 +16,24 @@ export class AuthMiddlewares {
    * @returns
    */
   static checkToken(req: Request, res: Response, next: NextFunction) {
-    return ErrorUtils.handleJSONResponseError(
-      this,
-      req,
-      res,
-      async function ($, $$, o) {
-        const authorization = req.headers.authorization;
+    return ErrorUtils.handleError(this, req, res, async function ($, $$, o) {
+      const authorization = req.headers.authorization;
 
-        if (!authorization) {
-          o.code = 401;
-          throw new Error("Token is required");
-        }
-
-        const [, token] = authorization.split(" ");
-        const result = await authService.verifyToken(token);
-
-        if (result.code) {
-          res.locals.tokenPayload = result.data;
-          return next();
-        } else {
-          o.code = 401;
-          throw new Error("Unauthenticated");
-        }
+      if (!authorization) {
+        o.code = 401;
+        throw new Error("Token is required");
       }
-    );
+
+      const [, token] = authorization.split(" ");
+      const result = await authService.verifyToken(token);
+
+      if (result.code) {
+        res.locals.tokenPayload = result.data;
+        return next();
+      } else {
+        o.code = 401;
+        throw new Error(result.message ? result.message : "Token is invalid");
+      }
+    });
   }
 }
