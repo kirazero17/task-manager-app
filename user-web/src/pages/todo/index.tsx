@@ -25,7 +25,9 @@ export default function TodoPage() {
 
   const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
   let totalTask = tasks ? tasks.length : 0;
-  let totalCompleteTask = completeTasks ? completeTasks.length : 0;
+  let totalCompleteTask = completeTasks
+    ? (completeTasks.length / totalTask) * 100
+    : 0;
 
   React.useEffect(() => {
     // Fetch some values

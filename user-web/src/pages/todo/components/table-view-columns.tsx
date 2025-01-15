@@ -117,7 +117,7 @@ export const taskColumns: ColumnDef<TaskType>[] = [
                   if (inputRef.current) {
                     // Update task
                     UserAPI.updateTask(taskId, {
-                      name: inputRef.current.value,
+                      description: inputRef.current.value,
                     }).then((response) => {
                       // Update task state
                       updateTask(response!.data);
