@@ -250,7 +250,11 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
         if (tasks && state.tasksByStatus)
           addTasksToGroupByOrder(state.tasksByStatus, tasks);
 
-        return { ...state, tasks: tasks, tasksByStatus: state.tasksByStatus };
+        return {
+          ...state,
+          tasks: state.tasks,
+          tasksByStatus: state.tasksByStatus,
+        };
       });
     },
 

@@ -13,7 +13,7 @@ export default function TableView() {
       {tasks === null ? (
         <p>Loading...</p>
       ) : (
-        <TableViewDataTable columns={taskColumns} data={tasks} />
+        <TableViewDataTable columns={taskColumns} data={[...tasks]} />
       )}
     </div>
   );

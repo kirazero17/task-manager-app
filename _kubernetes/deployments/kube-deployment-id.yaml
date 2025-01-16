@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: identity-service
-    labels:
-      app.kubernetes.io/name: app-id
+  name: identity-service
+  labels:
+    app.kubernetes.io/name: app-id
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app.kubernetes.io/name: app-id
-    template:
-        metadata:
-            labels:
-              app.kubernetes.io/name: app-id
-        spec:
-          containers:
-            - name: identity-service
-              image: nguyenanhtuan19122002/identity-service
-              ports: 
-              - containerPort: 5000
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app-id
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app-id
+    spec:
+      containers:
+        - name: identity-service
+          image: nguyenanhtuan19122002/identity-service
+          ports:
+            - containerPort: 5000

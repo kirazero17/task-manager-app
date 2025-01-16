@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: ui-web
 spec:
-  type: LoadBalancer # Default - CLB
+  type: LoadBalancer
   selector:
     app.kubernetes.io/name: app-web
-  ports: 
+  ports:
     - port: 8080
       targetPort: 80

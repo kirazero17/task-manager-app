@@ -149,17 +149,6 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const startAt = row.getValue("startAt") as any;
-      const [date, setDate] = React.useState(new Date(startAt));
-
-      React.useEffect(() => {
-        // Update task
-        UserAPI.updateTask(taskId, { startAt: date.getTime() }).then(
-          (response) => {
-            // Update task state
-            updateTask(response!.data);
-          }
-        );
-      }, [date]);
 
       return (
         <div className="flex items-center justify-between">
@@ -168,8 +157,15 @@ export const taskColumns: ColumnDef<TaskType>[] = [
             TriggerContent={
               <PencilLine className="cursor-pointer" color="gray" size="16px" />
             }
-            date={date}
-            setDate={setDate}
+            date={new Date(startAt)}
+            setDate={(date: any) => {
+              UserAPI.updateTask(taskId, { startAt: date.getTime() }).then(
+                (response) => {
+                  // Update task state
+                  updateTask(response!.data);
+                }
+              );
+            }}
           />
         </div>
       );
@@ -182,17 +178,6 @@ export const taskColumns: ColumnDef<TaskType>[] = [
       const { updateTask } = useTaskState();
       const taskId = row.getValue("_id") as string;
       const endAt = row.getValue("endAt") as any;
-      const [date, setDate] = React.useState(new Date(endAt));
-
-      React.useEffect(() => {
-        // Update task
-        UserAPI.updateTask(taskId, { endAt: date.getTime() }).then(
-          (response) => {
-            // Update task state
-            updateTask(response!.data);
-          }
-        );
-      }, [date]);
 
       return (
         <div className="flex items-center justify-between">
@@ -201,8 +186,15 @@ export const taskColumns: ColumnDef<TaskType>[] = [
             TriggerContent={
               <PencilLine className="cursor-pointer" color="gray" size="16px" />
             }
-            date={date}
-            setDate={setDate}
+            date={new Date(endAt)}
+            setDate={(date: any) => {
+              UserAPI.updateTask(taskId, { endAt: date.getTime() }).then(
+                (response) => {
+                  // Update task state
+                  updateTask(response!.data);
+                }
+              );
+            }}
           />
         </div>
       );

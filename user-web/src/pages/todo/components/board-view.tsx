@@ -38,7 +38,7 @@ function removeOutlineClassName(elements: any, statusName: string) {
  * @returns
  */
 export default function BoardView() {
-  const { tasks, tasksByStatus, taskStatuses, setCurrentTask, updateTask } =
+  const { tasksByStatus, taskStatuses, setCurrentTask, updateTask } =
     useTaskState();
   const columnRefs = React.useRef<Map<string, HTMLDivElement | null>>(
     new Map()

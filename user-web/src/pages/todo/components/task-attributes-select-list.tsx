@@ -149,10 +149,6 @@ export function TaskPriorityDropdownMenu(props: TaskAttributesListProps) {
     return <p>Empty list</p>;
   }
 
-  React.useEffect(() => {
-    if (props.onSelect) props.onSelect(value);
-  }, [value]);
-
   return React.useMemo(
     () => (
       <DropdownMenu>
@@ -280,10 +276,6 @@ export function TaskSizeDropdownMenu(props: TaskAttributesListProps) {
   if (!Element || !taskSizes) {
     return <p>Empty list</p>;
   }
-
-  React.useEffect(() => {
-    if (props.onSelect) props.onSelect(value);
-  }, [value]);
 
   return React.useMemo(
     () => (
@@ -415,10 +407,6 @@ export function TaskStatusDropdownMenu(props: TaskAttributesListProps) {
   if (!Element || !taskStatuses) {
     return <p>Empty list</p>;
   }
-
-  React.useEffect(() => {
-    if (props.onSelect) props.onSelect(value);
-  }, [value]);
 
   return React.useMemo(
     () => (

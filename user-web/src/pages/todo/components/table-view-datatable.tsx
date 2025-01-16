@@ -55,7 +55,9 @@ export function DataTablePagination<TData>({
       // Request more tasks
       UserAPI.getTasks({
         limit: table.getState().pagination.pageSize,
-        skip: table.getState().pagination.pageIndex + 1,
+        skip:
+          table.getState().pagination.pageSize *
+          (table.getState().pagination.pageIndex + 1),
       }).then((response) => {
         const tasks = response?.data;
 

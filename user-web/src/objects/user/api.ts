@@ -56,7 +56,7 @@ export class UserAPI {
    */
   static async getTasks(params?: Record<string, any>) {
     if (!params) params = {};
-    if (!params.limit) params.limit = 10000;
+    if (!params.limit) params.limit = 10;
     if (!params.skip) params.skip = 0;
 
     try {

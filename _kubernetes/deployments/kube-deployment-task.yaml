@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: task-service
-    labels:
-      app.kubernetes.io/name: app-task
+  name: task-service
+  labels:
+    app.kubernetes.io/name: app-task
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app.kubernetes.io/name: app-task
-    template:
-        metadata:
-            labels:
-              app.kubernetes.io/name: app-task
-        spec:
-          containers:
-            - name: task-sservice
-              image: nguyenanhtuan19122002/task-service
-              ports: 
-              - containerPort: 3000
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app-task
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app-task
+    spec:
+      containers:
+        - name: task-sservice
+          image: nguyenanhtuan19122002/task-service
+          ports:
+            - containerPort: 3000

@@ -25,8 +25,9 @@ export default function TodoPage() {
 
   const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
   let totalTask = tasks ? tasks.length : 0;
-  let totalCompleteTask = completeTasks
-    ? (completeTasks.length / totalTask) * 100
+  let totalCompleteTask = completeTasks ? completeTasks.length : 0;
+  let totalCompleteTaskPercent = completeTasks
+    ? (totalCompleteTask / totalTask) * 100
     : 0;
 
   React.useEffect(() => {
@@ -35,7 +36,7 @@ export default function TodoPage() {
       // In development
       // Fetch data from mock data
       import("src/mock-data/tasks.json").then((result) => {
-        setTasks(result.default);
+        setTasks(result.default as any);
       });
     } else if (import.meta.env.VITE_MODE === "prod") {
       // In production
@@ -53,7 +54,7 @@ export default function TodoPage() {
           <h1 className="text-lg font-bold">Tasks</h1>
           <div className="flex items-center">
             <Progress
-              value={totalCompleteTask}
+              value={totalCompleteTaskPercent}
               className="w-full h-[6px] me-3"
             />
             <span className="text-xs">

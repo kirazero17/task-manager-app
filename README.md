@@ -90,6 +90,19 @@ docker compose -f _deployments/docker-compose.yml up
 
 See the result!! But sometime MySQL will be unhealthy and I don't know what happend (it may be caused by Health check or MySQL Image).
 
-### Deploy with K8S / Amazon EKS
+### Deploy with Kubernetes / Amazon EKS
 
-Update later...
+Take a look into `_kubernetes` folder, you can deploy with K8S / Amazon EKS now. But before you deploy, you have to make sure that `host` properties in `task-service/src/db.config.json` and `identity-service/src/db.config.json` are changed, like this:
+
+- Change `task.database` to `task-database`.
+- Change `identity.database` to `identity-database`.
+
+Then build new images with previous commands. Finally, run these commands to deploy.
+
+```bash
+kubectl create ns my-app
+kubectl apply -f _kubernetes/services -n my-app
+kubectl apply -f _kubernetes/deployments -n my-app
+```
+
+And depend on your demand, you can expose user web with `kube-svc-web.yaml` or use classic load balancer with `clb-svc.yaml`. And please make sure that you have 2 **t2.small** instances or 4 **t2.micro** instances to deploy this application.
