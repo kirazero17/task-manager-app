@@ -93,7 +93,7 @@ export default function () {
   }
 
   LoggerBuilder.Logger.info(
-    `All ORM Models of ${DatabaseConfig.databases[0].name} are ready to used.`
+    `All ORM Models of ${DatabaseConfig.databases[1].name} are ready to used.`
   );
 
   return _models as TaskManagerModelsType;
