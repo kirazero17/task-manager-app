@@ -101,7 +101,10 @@ export class LoggerBuilder {
   /**
    * Root logger
    */
-  static Logger = new LoggerBuilder().to("logs").to("logs.error").build();
+  static Logger = new LoggerBuilder()
+    .to("logs")
+    .to("logs.error", { level: "error" })
+    .build();
 
   constructor(options: LoggerOptions = {}) {
     // Setup
