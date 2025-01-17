@@ -19,7 +19,7 @@ import type { Request } from "express";
 
 const { combine, timestamp, label, printf } = winston.format;
 
-type ULogLever = "info" | "error" | "warn" | "debug" | "fatal";
+type ULogLever = "info" | "error" | "warn" | "debug";
 
 type LoggerOptions = {
   rootLevel?: ULogLever;
@@ -109,6 +109,11 @@ export class LoggerBuilder {
         timestamp(),
         stringFormat
       ),
+    }),
+    new winston.transports.File({
+      level: "error",
+      filename: path.resolve(LOG_ROOT, generateFilename("logs.error")),
+      format: combine(label({ label: AppConfig.app }), timestamp(), jsonFormat),
     }),
     new winston.transports.File({
       level: "info",
@@ -257,7 +262,6 @@ export class LoggerBuilder {
     const _instance = winston.createLogger({
       level: this.rootLevel,
       format: combine(label({ label: AppConfig.app }), timestamp(), jsonFormat),
-      transports: this._transports,
     });
 
     // Create new cronjob

@@ -5,7 +5,7 @@ const _rootEndpoints = new Endpoints("");
 
 // Add handler
 _rootEndpoints.createHandler("/").get((req, res) => {
-  return "Welcome to `NodeTS auto-built template`";
+  return "Welcome to Task Service";
 });
 
 export default _rootEndpoints;

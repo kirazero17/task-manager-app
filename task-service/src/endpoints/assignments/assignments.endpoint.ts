@@ -11,11 +11,11 @@ import { AuthMiddlewares } from "src/services/auth/middlewares";
 import type { TaskManagerModelsType } from "src/databases/task";
 
 const assignmentsEndpoints = new Endpoints("assignments");
-let TaskManagerModels: TaskManagerModelsType;
-task().then((models) => {
-  // console.log("TaskEndpoint:", "Connected to MongoDB");
-  TaskManagerModels = models;
-});
+let TaskManagerModels: TaskManagerModelsType = task();
+// task().then((models) => {
+//   // console.log("TaskEndpoint:", "Connected to MongoDB");
+//   TaskManagerModels = models;
+// });
 
 // Add your handlers here
 assignmentsEndpoints.createHandler("").get((req, res) => {

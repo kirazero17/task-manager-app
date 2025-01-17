@@ -26,7 +26,8 @@
     "sequelize": "^6.37.5",
     "ts-node": "^10.9.2",
     "uuid": "^11.0.3",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "cron": "^3.5.0"
   },
   "_moduleAliases": {
     "src": "./src"

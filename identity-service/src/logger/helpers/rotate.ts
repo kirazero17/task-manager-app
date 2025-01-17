@@ -18,7 +18,7 @@ export default function creatLogsDailyRotate(
   loggerBuilder: LoggerBuilder,
   logRoot: string
 ) {
-  // Each 5 minutes create new files
+  // Each 15 minutes create new files
   return new CronJob("*/15 * * * *", function () {
     const transportConfigurations = loggerBuilder.getTransportConfigurations();
     const N = transportConfigurations.length;
@@ -32,8 +32,6 @@ export default function creatLogsDailyRotate(
         logRoot,
         generateFilename(filename, transportConfigurations[i].level)
       );
-      console.log("Filename:", filename);
-      console.log("New file path:", transportConfigurations[i].filename);
 
       logger.add(new winston.transports.File(transportConfigurations[i]));
     }

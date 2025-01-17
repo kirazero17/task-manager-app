@@ -24,7 +24,8 @@
     "path-to-regexp": "^8.2.0",
     "sequelize": "^6.37.5",
     "ts-node": "^10.9.2",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "cron": "^3.5.0"
   },
   "_moduleAliases": {
     "src": "./src"
