@@ -208,15 +208,19 @@ function deleteTaskFromGroup(
   deleteTaskFromList(taskList, task);
 }
 
+const initialState = {
+  currentTask: null,
+  tasks: null,
+  tasksByStatus: null,
+  taskStatuses: null,
+  taskPriorities: null,
+  taskSizes: null,
+  isResponding: false,
+};
+
 export const useTaskState = create<TaskState & TaskActions>((set) => {
   return {
-    currentTask: null,
-    tasks: null,
-    tasksByStatus: null,
-    taskStatuses: null,
-    taskPriorities: null,
-    taskSizes: null,
-    isResponding: false,
+    ...initialState,
     updateIsResponding(status?: boolean) {
       set((state) => ({ ...state, isResponding: Boolean(status) }));
     },
@@ -229,6 +233,14 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
 
     setTasks(tasks) {
       set((state) => {
+        if (state.taskStatuses && !state.tasksByStatus) {
+          state.taskStatuses.sort((a, b) => a.order - b.order);
+
+          state.tasksByStatus = new Map<string, Array<TaskType> | null>(
+            state.taskStatuses.map((status) => [status.value, null])
+          );
+        }
+
         // If task and state.tasksByStatus are not null,
         // classify tasks with status
         if (tasks && state.tasksByStatus)
@@ -367,23 +379,20 @@ export const useTaskState = create<TaskState & TaskActions>((set) => {
 
     clearTasks() {
       set((state) => {
-        return { ...state, tasks: null };
+        return {
+          ...state,
+          ...initialState,
+          taskSizes: state.taskSizes,
+          taskPriorities: state.taskPriorities,
+          taskStatuses: state.taskStatuses,
+        };
       });
     },
 
     // For status of task
     setTaskStatuses(statuses: Array<TaskStatusType> | null) {
       set((state) => {
-        let tasksByStatus;
-
-        if (statuses) {
-          statuses.sort((a, b) => a.order - b.order);
-
-          tasksByStatus = new Map<string, Array<TaskType> | null>(
-            statuses.map((priority) => [priority.value, null])
-          );
-        }
-        return { ...state, taskStatuses: statuses, tasksByStatus };
+        return { ...state, taskStatuses: statuses };
       });
     },
 

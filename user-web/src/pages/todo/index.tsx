@@ -21,7 +21,7 @@ import { UserAPI } from "src/objects/user/api";
 import { useTaskState } from "src/states/task";
 
 export default function TodoPage() {
-  const { tasks, tasksByStatus, setTasks } = useTaskState();
+  const { tasks, tasksByStatus, setTasks, clearTasks } = useTaskState();
 
   const completeTasks = tasksByStatus ? tasksByStatus.get("done") : null;
   let totalTask = tasks ? tasks.length : 0;
@@ -45,6 +45,10 @@ export default function TodoPage() {
         setTasks(result?.data!);
       });
     }
+
+    return function () {
+      clearTasks();
+    };
   }, []);
 
   return (
