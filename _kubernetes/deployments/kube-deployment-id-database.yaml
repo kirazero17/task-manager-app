@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: identity-database
-          image: nguyenanhtuan19122002/identity-database
+          image: CONTAINER_IMAGE
           ports:
             - containerPort: 3306
           env:

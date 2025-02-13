@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: user-web
-          image: nguyenanhtuan19122002/user-web
+          image: CONTAINER_IMAGE
           ports:
             - containerPort: 80

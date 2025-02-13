@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: identity-service
-          image: nguyenanhtuan19122002/identity-service
+          image: CONTAINER_IMAGE
           ports:
             - containerPort: 5000

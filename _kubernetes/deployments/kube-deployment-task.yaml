@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: task-sservice
-          image: nguyenanhtuan19122002/task-service
+          image: CONTAINER_IMAGE
           ports:
             - containerPort: 3000
