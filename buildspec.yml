@@ -4,22 +4,22 @@ run-as: ubuntu
 batch:
   fast-fail: false
   build-list:
-    - identifier: identity-database
+    - identifier: identity_database
       ignore-failure: false
       buildspec: identity-database/buildspec.yml
 
-    - identifier: identity-service
+    - identifier: identity_service
       ignore-failure: false
       buildspec: identity-service/buildspec.yml
 
-    - identifier: task-database
+    - identifier: task_database
       ignore-failure: false
       buildspec: task-database/buildspec.yml
 
-    - identifier: task-service
+    - identifier: task_service
       ignore-failure: false
       buildspec: task-service/buildspec.yml
 
-    - identifier: user-web
+    - identifier: user_web
       ignore-failure: false
       buildspec: user-web/buildspec.yml
