@@ -1,0 +1,25 @@
+version: 0.2
+run-as: ubuntu
+
+batch:
+  fast-fail: false
+  build-list:
+    - identifier: identity-database
+      ignore-failure: false
+      buildspec: identity-database/buildspec.yml
+
+    - identifier: identity-service
+      ignore-failure: false
+      buildspec: identity-service/buildspec.yml
+
+    - identifier: task-database
+      ignore-failure: false
+      buildspec: task-database/buildspec.yml
+
+    - identifier: task-service
+      ignore-failure: false
+      buildspec: task-service/buildspec.yml
+
+    - identifier: user-web
+      ignore-failure: false
+      buildspec: user-web/buildspec.yml
