@@ -39,7 +39,7 @@ artifacts:
       name: identity_service-artifact
     task_database:
       files:
-        - 'task-service/task-database/**/*'
+        - 'task-database/**/*'
       name: task_database-artifact
     task_service:
       files:
