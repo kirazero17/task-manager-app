@@ -23,3 +23,29 @@ batch:
     - identifier: user_web
       ignore-failure: false
       buildspec: user-web/buildspec.yml
+
+artifacts:
+  files:
+    - build/build.json
+  name: batch-build
+  secondary-artifacts:
+    identity_database:
+      files:
+        - 'identity-database/**/*'
+      name: identity_database-artifact
+    identity_service:
+      files:
+        - 'identity-service/**/*'
+      name: identity_service-artifact
+    task_database:
+      files:
+        - 'task-service/task-database/**/*'
+      name: task_database-artifact
+    task_service:
+      files:
+        - 'task-service/**/*'
+      name: task_service-artifact
+    user_web:
+      files:
+        - 'user-web/**/*'
+      name: user_web-artifact

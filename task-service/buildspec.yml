@@ -49,10 +49,10 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       # Apply changes to our Application using kubectl
       - echo "Apply changes to kube manifest"            
-      - kubectl apply -f kube-manifest/
+      - kubectl apply -f ../_kubernetes/deployments/kube-deployment-task.yaml
       - echo "Completed applying changes to Kubernetes Objects"           
       # Create Artifacts which we can use if we want to continue our pipeline for other stages
-      - printf '[{"name":"../_kubernetes/deployments/kube-deployment-id-database.yaml","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
+      - printf '[{"name":"../_kubernetes/deployments/kube-deployment-task.yaml","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
       # Additional Commands to view your credentials      
       #- echo "Credentials Value is..  ${CREDENTIALS}"      
       #- echo "AWS_ACCESS_KEY_ID...  ${AWS_ACCESS_KEY_ID}"            
@@ -62,5 +62,5 @@ phases:
       #- echo "EKS_CLUSTER_NAME...  $EKS_CLUSTER_NAME"
 artifacts:
   files: 
-    - build.json   
-    - ../_kubernetes/deployments/kube-deployment-id-database.yaml
+    - build/build.json   
+    - ../_kubernetes/deployments/kube-deployment-task.yaml
