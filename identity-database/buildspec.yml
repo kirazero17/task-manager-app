@@ -64,4 +64,4 @@ artifacts:
   files: 
     - build/build.json   
     - ../_kubernetes/deployments/kube-deployment-id-database.yaml
-  name: 
+  name: identity_database-artifact

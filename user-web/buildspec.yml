@@ -64,3 +64,4 @@ artifacts:
   files: 
     - build/build.json   
     - ../_kubernetes/deployments/kube-deployment-web.yaml
+  name: user_web-artifact

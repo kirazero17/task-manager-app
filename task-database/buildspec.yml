@@ -64,3 +64,4 @@ artifacts:
   files: 
     - build/build.json   
     - ../_kubernetes/deployments/kube-deployment-task-database.yaml
+  name: task_database-artifact
