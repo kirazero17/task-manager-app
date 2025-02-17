@@ -72,7 +72,7 @@ jobs:
       - name: Assuming AWS IAM Role
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          role-to-assume: arn:aws:iam::${{ secret.AWS_ACCOUNT_ID }}:role/GitHub-ECR-kirazero1x
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHub-ECR-kirazero1x
           role-session-name: GitHub_Role_AWS_OIDC_ssn
           aws-region: ${{ env.AWS_REGION }}
 
@@ -99,7 +99,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+          ECR_REPOSITORY: fcj-cicd-repository
           IMAGE_TAG: ${{ matrix.image }}:${{ needs.prepare_tag.outputs.tag }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ matrix.path }}
