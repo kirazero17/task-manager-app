@@ -1,0 +1,106 @@
+name: Deploy to Amazon ECR
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: ap-southeast-2
+
+jobs:
+  prepare_tag:
+    outputs:
+      tag: ${{ steps.semver.outputs.next }}
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Defaults to patch version, will bump minor on "feat" commit
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+          patchAll: true
+
+      - name: Push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.semver.outputs.next }}
+          tag_prefix: ""
+
+  build_and_push:
+    permissions:
+      contents: write
+      packages: write
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - image: ecr-repo-id-db
+            dockerfile: identity-database/Dockerfile
+            path: identity-database
+          - image: ecr-repo-id-svc
+            dockerfile: identity-service/Dockerfile
+            path: identity-service
+          - image: ecr-repo-ta-db
+            dockerfile: task-database/Dockerfile
+            path: task-database
+          - image: ecr-repo-ta-svc
+            dockerfile: task-service/Dockerfile
+            path: task-service
+          - image: ecr-repo-wb-ui
+            dockerfile: user-web/Dockerfile
+            path: user-web
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Assuming AWS IAM Role
+        uses: aws-actions/configure-aws-credentials@v4.1.0
+        with:
+          role-to-assume: arn:aws:iam::${{ secret.AWS_ACCOUNT_ID }}:role/GitHub-ECR-kirazero1x
+          role-session-name: GitHub_Role_AWS_OIDC_ssn
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Check my role with Sts Get Caller Identity
+        run: |
+          aws sts get-caller-identity 
+      
+      - name: Login to Amazon Elastic Container Registry
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # loops over all images in the matrix defined on top
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.path }}
+          platforms: linux/amd64
+          tags: ${{ matrix.image }}:${{ needs.prepare_tag.outputs.tag }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+      
+      - name: Build, tag, and push the image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+          IMAGE_TAG: ${{ matrix.image }}:${{ needs.prepare_tag.outputs.tag }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ matrix.path }}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
