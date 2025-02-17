@@ -30,6 +30,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           patchAll: true
+          fallbackTag: v0.0.1
 
       - name: Push tag
         id: tag_version
