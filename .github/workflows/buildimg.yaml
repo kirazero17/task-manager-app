@@ -51,7 +51,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: ecr-repo-id-db
+          - image: ecr-repo-id-d
             dockerfile: identity-database/Dockerfile
             path: identity-database
           - image: ecr-repo-id-svc
