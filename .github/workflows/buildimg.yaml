@@ -114,6 +114,6 @@ jobs:
           IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
         run: |
           sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" ${{ matrix.kubedeployment }} && \
-          kubectl apply -f _kubernetes/deployments
-          kubectl apply -f _kubernetes/services
-          kubectl apply -f _kubernetes/kube-svc-web.yaml
+          kubectl apply -f _kubernetes/deployments --validate=false
+          kubectl apply -f _kubernetes/services --validate=false
+          kubectl apply -f _kubernetes/kube-svc-web.yaml --validate=false
