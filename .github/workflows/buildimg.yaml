@@ -81,7 +81,7 @@ jobs:
       - name: Assuming AWS IAM Role
         uses: aws-actions/configure-aws-credentials@v4.1.0
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHub-ECR-kirazero1x
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/EKSWorkshopHostRoleRemote
           role-session-name: GitHub_Role_AWS_OIDC_ssn
           aws-region: ${{ env.AWS_REGION }}
 
