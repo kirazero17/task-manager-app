@@ -119,7 +119,7 @@ jobs:
       - name: Deploy to EKS
         env:
           NAMESPACE: eks-cicd-apps
-          KUBECONFIG: "~/.kube/config"
+          KUBECONFIG: "/home/runner/.kube/config"
         run: |
           kubectl create namespace $NAMESPACE || echo "namespace already exists"
           kubectl apply -f _kubernetes/deployments -n $NAMESPACE
