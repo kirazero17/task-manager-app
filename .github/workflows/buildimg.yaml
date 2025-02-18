@@ -123,5 +123,3 @@ jobs:
         run: |
           kubectl create namespace $NAMESPACE || echo "namespace already exists"
           kubectl apply -f _kubernetes/deployments -n $NAMESPACE
-          kubectl apply -f _kubernetes/services -n $NAMESPACE
-          kubectl apply -f _kubernetes/kube-svc-web.yaml -n $NAMESPACE
