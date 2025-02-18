@@ -86,23 +86,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # loops over all images in the matrix defined on top
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ matrix.path }}
-          platforms: linux/amd64
-          tags: ${{ matrix.image }}:${{ needs.prepare_tag.outputs.tag }}
-          file: ${{ matrix.dockerfile }}
-          push: true
-      
       - name: Build, tag, and push the image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: fcj-cicd-repository
-          IMAGE_TAG: ${{ matrix.image }}:${{ needs.prepare_tag.outputs.tag }}
+          ECR_REPOSITORY: ${{ matrix.image }}
+          IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ matrix.path }}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f ${{ matrix.path }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
