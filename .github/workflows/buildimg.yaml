@@ -7,6 +7,7 @@ on:
 
 env:
   AWS_REGION: ap-southeast-2
+  EKS_CLUSTER_NAME: eks-cicd-cluster
 
 jobs:
   prepare_tag:
@@ -55,18 +56,23 @@ jobs:
           - image: ecr-repo-id-db
             dockerfile: identity-database/Dockerfile
             path: identity-database
+            kubedeployment: _kubernetes/deployments/kube-deployment-id-database.yaml
           - image: ecr-repo-id-svc
             dockerfile: identity-service/Dockerfile
             path: identity-service
+            kubedeployment: _kubernetes/deployments/kube-deployment-id.yaml
           - image: ecr-repo-ta-db
             dockerfile: task-database/Dockerfile
             path: task-database
+            kubedeployment: _kubernetes/deployments/kube-deployment-task-database.yaml
           - image: ecr-repo-ta-svc
             dockerfile: task-service/Dockerfile
             path: task-service
+            kubedeployment: _kubernetes/deployments/kube-deployment-task.yaml
           - image: ecr-repo-wb-ui
             dockerfile: user-web/Dockerfile
             path: user-web
+            kubedeployment: _kubernetes/deployments/kube-deployment-web.yaml
 
     steps:
       - name: Checkout
@@ -97,3 +103,17 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ${{ matrix.path }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+  
+      - name: Deploy to EKS
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
+          IMAGE_TAG: ${{ steps.commit.outputs.short }}
+          ECR_REPOSITORY: ${{ matrix.image }}
+          IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
+        run: |
+          sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" ${{ matrix.kubedeployment }} && \
+          kubectl apply -f manifests/hello-app-deployment.yaml
+          kubectl apply -f manifests/hello-app-service.yaml
