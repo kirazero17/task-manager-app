@@ -104,9 +104,6 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest $BUILD_PATH
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
   
       - name: Replace the images in the manifests
         env:
@@ -121,6 +118,7 @@ jobs:
           NAMESPACE: eks-cicd-apps
           KUBECONFIG: "~/.kube/config"
         run: |
+          aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
           kubectl create namespace $NAMESPACE || echo "namespace already exists"
           kubectl apply -f _kubernetes/deployments -n $NAMESPACE
           kubectl apply -f _kubernetes/services -n $NAMESPACE
