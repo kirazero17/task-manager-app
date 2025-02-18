@@ -104,6 +104,14 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest $BUILD_PATH
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      
+      - name: Replace the images in the manifests
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ matrix.image }}
+          IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
+        run: |
+          sed -i.bak "s|CONTAINER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" ${{ matrix.kubedeployment }}
 
   deploy:
     permissions:
@@ -132,14 +140,6 @@ jobs:
       
       - name: Update kube config
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
-  
-      - name: Replace the images in the manifests
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr-2.outputs.registry }}
-          ECR_REPOSITORY: ${{ matrix.image }}
-          IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
-        run: |
-          sed -i.bak "s|CONTAINER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" ${{ matrix.kubedeployment }}
 
       - name: Deploy to EKS
         env:
