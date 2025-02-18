@@ -109,8 +109,7 @@ jobs:
   
       - name: Deploy to EKS
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
-          IMAGE_TAG: ${{ steps.commit.outputs.short }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.image }}
           IMAGE_TAG: ${{ needs.prepare_tag.outputs.tag }}
         run: |
