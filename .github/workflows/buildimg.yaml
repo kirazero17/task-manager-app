@@ -57,22 +57,27 @@ jobs:
             dockerfile: identity-database/Dockerfile
             path: identity-database
             kubedeployment: _kubernetes/deployments/kube-deployment-id-database.yaml
+            kubesvc: _kubernetes/services/kube-svc-id-database.yaml
           - image: ecr-repo-id-svc
             dockerfile: identity-service/Dockerfile
             path: identity-service
             kubedeployment: _kubernetes/deployments/kube-deployment-id.yaml
+            kubesvc: _kubernetes/services/kube-svc-id.yaml
           - image: ecr-repo-ta-db
             dockerfile: task-database/Dockerfile
             path: task-database
             kubedeployment: _kubernetes/deployments/kube-deployment-task-database.yaml
+            kubesvc: _kubernetes/services/kube-svc-task-database.yaml
           - image: ecr-repo-ta-svc
             dockerfile: task-service/Dockerfile
             path: task-service
             kubedeployment: _kubernetes/deployments/kube-deployment-task.yaml
+            kubesvc: _kubernetes/services/kube-svc-task.yaml
           - image: ecr-repo-wb-ui
             dockerfile: user-web/Dockerfile
             path: user-web
-            kubedeployment: _kubernetes/deployments/kube-deployment-web.yaml
+            kubedeployment: _kubernetes/deployments/kube-svc-task.yaml
+            kubesvc: _kubernetes/kube-svc-task.yaml
 
     steps:
       - name: Checkout
@@ -120,6 +125,9 @@ jobs:
         env:
           NAMESPACE: eks-cicd-apps
           KUBECONFIG: "/home/runner/.kube/config"
+          DEPLOYMENT: ${{ matrix.kubedeployment }}
+          SERVICE: ${{ matrix.kubesvc }}
         run: |
           kubectl create namespace $NAMESPACE || echo "namespace already exists"
-          kubectl apply -f _kubernetes/deployments -n $NAMESPACE
+          kubectl apply -f $DEPLOYMENT -n $NAMESPACE
+          kubectl apply -f $SERVICE -n $NAMESPACE
