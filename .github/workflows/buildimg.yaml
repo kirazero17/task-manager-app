@@ -76,8 +76,8 @@ jobs:
           - image: ecr-repo-wb-ui
             dockerfile: user-web/Dockerfile
             path: user-web
-            kubedeployment: _kubernetes/deployments/kube-svc-task.yaml
-            kubesvc: _kubernetes/kube-svc-task.yaml
+            kubedeployment: _kubernetes/deployments/kube-deployment-web.yaml
+            kubesvc: _kubernetes/kube-svc-web.yaml
 
     steps:
       - name: Checkout
