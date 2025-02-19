@@ -4,7 +4,7 @@
       "name": "identity",
       "database": "TaskManagerIdentity",
       "engine": "mysql",
-      "host": "identity.database",
+      "host": "identity-database",
       "username": "root",
       "password": "letmein12345",
       "objects": {
