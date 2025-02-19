@@ -30,7 +30,7 @@ export default function Signin() {
     <div className="w-full max-w-[480px] bg-white p-6 rounded-lg border border-blue-700">
       <header>
         <h1 className="font-bold text-4xl">Sign in</h1>
-        <p>Do we know you?</p>
+        <p>You know yourself best!</p>
       </header>
       <hr className="my-3" />
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
