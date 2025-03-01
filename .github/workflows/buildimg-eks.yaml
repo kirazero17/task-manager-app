@@ -1,4 +1,5 @@
-name: Deploy to Amazon ECR only
+name: Deploy to Amazon ECR & Amazon EKS
+
 on:
   push:
     branches:
@@ -117,18 +118,16 @@ jobs:
         run: |
           sed -i.bak "s|CONTAINER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" ${{ matrix.kubedeployment }}
       
-# The following lines were commented out to avoid pushing to EKS or any Kubernetes cluster. For workflows that involves EKS, see the file "buildimg-eks.yaml"
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-      # - name: Update kube config
-      #   run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
-
-      # - name: Deploy to EKS
-      #   env:
-      #     NAMESPACE: eks-cicd-apps
-      #     KUBECONFIG: "/home/runner/.kube/config"
-      #     DEPLOYMENT: ${{ matrix.kubedeployment }}
-      #     SERVICE: ${{ matrix.kubesvc }}
-      #   run: |
-      #     kubectl create namespace $NAMESPACE || echo "namespace already exists"
-      #     kubectl apply -f $DEPLOYMENT -n $NAMESPACE
-      #     kubectl apply -f $SERVICE -n $NAMESPACE
+      - name: Deploy to EKS
+        env:
+          NAMESPACE: eks-cicd-apps
+          KUBECONFIG: "/home/runner/.kube/config"
+          DEPLOYMENT: ${{ matrix.kubedeployment }}
+          SERVICE: ${{ matrix.kubesvc }}
+        run: |
+          kubectl create namespace $NAMESPACE || echo "namespace already exists"
+          kubectl apply -f $DEPLOYMENT -n $NAMESPACE
+          kubectl apply -f $SERVICE -n $NAMESPACE
